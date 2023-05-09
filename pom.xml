@@ -27,7 +27,7 @@
         <edu_zhy.version>${revision}</edu_zhy.version>
         <edu_zhy-api.version>1.0.1-SNAPSHOT</edu_zhy-api.version>
 
-        <netty.tcnative.api.version>2.0.39.Final</netty.tcnative.api.version>
+<!--        <netty.tcnative.api.version>2.0.39.Final</netty.tcnative.api.version>-->
 
         <java.version>19</java.version>
         <spring-cloud.version>2022.0.1</spring-cloud.version>
@@ -173,11 +173,11 @@
         <version>3.11</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-tcnative</artifactId>
-            <version>${netty.tcnative.api.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.netty</groupId>-->
+<!--            <artifactId>netty-tcnative</artifactId>-->
+<!--            <version>${netty.tcnative.api.version}</version>-->
+<!--        </dependency>-->
 
     <dependency>
         <groupId>com.alibaba</groupId>
@@ -237,16 +237,29 @@
     </dependency>
 
     <!--		&lt;!&ndash; https://mvnrepository.com/artifact/io.netty/netty-all &ndash;&gt;-->
-    <!--		<dependency>-->
-    <!--			<groupId>io.netty</groupId>-->
-    <!--			<artifactId>netty-all</artifactId>-->
-    <!--			<version>4.1.65.Final</version>-->
-    <!--		</dependency>-->
+    		<dependency>
+    			<groupId>io.netty</groupId>
+    			<artifactId>netty-all</artifactId>
+    			<version>4.1.65.Final</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-tcnative</artifactId>
+                    </exclusion>
+                </exclusions>
+    		</dependency>
+
     <!-- https://mvnrepository.com/artifact/io.netty/netty-example -->
     <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-example</artifactId>
         <version>4.1.65.Final</version>
+        <exclusions>
+            <exclusion>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-tcnative</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
 
 
