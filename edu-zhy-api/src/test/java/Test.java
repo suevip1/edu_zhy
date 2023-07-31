@@ -1,5 +1,23 @@
+import org.apache.commons.lang3.StringUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class Test {
 
+    private static final String CREATE = "2022-12-01 23:59:59";
+
+    private static final String UPDATE = "2022-12-09 23:59:59";
+
+
+    private static final String DATE = "2022-12-31 23:59:59";
+    /**
+     * 默认时间格式
+     */
+    public static final String DEFAULT_DATE_TIME_FORMAT_STR = "yyyy-MM-dd HH:mm:ss";
 
     private static final com.edu.zhy.api.api.spring.FrameworkThreadPoolExecutor threadPool
             = new com.edu.zhy.api.api.spring.FrameworkThreadPoolExecutor(4, 10, 30L
@@ -46,7 +64,7 @@ public class Test {
 //    }
 
 
-    @org.junit.Test
+    @org.junit.jupiter.api.Test
     public void m12 (){
 
         java.util.List<String> a1 = new java.util.ArrayList<>(3);
@@ -62,14 +80,14 @@ public class Test {
 
         },threadPool);
 
-        java.util.concurrent.CompletableFuture.runAsync(() -> {
-            String name = Thread.currentThread().getName();
-            for (String b1 : list){
-                a1.add(b1);
-                System.err.println("当前执行的线程是"+name +"////"+a1);
-            }
-
-        },threadPool);
+//        java.util.concurrent.CompletableFuture.runAsync(() -> {
+//            String name = Thread.currentThread().getName();
+//            for (String b1 : list){
+//                a1.add(b1);
+//                System.err.println("当前执行的线程是"+name +"////"+a1);
+//            }
+//
+//        },threadPool);
 
 
 
@@ -89,9 +107,39 @@ public class Test {
     }
 
 
+    @org.junit.Test
+    public void timeM1 (){
+        List<Integer> list = new ArrayList<>();
+
+        System.err.println(convertTimeUpdatedAt(CREATE).before(convertTimeUpdatedAt(DATE)));
+
+        if (convertTimeUpdatedAt(CREATE).before(convertTimeUpdatedAt(DATE))
+                && convertTimeUpdatedAt(UPDATE).before(convertTimeUpdatedAt(DATE))){
+            list.add(1);
+        }
+
+        System.err.println(list);
+
+    }
 
 
-
+    /**
+     * *字符串转换为时间格式
+     * @param date
+     * @return
+     */
+    public static Date convertTimeUpdatedAt(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        }
+        try {
+            date = StringUtils.trim(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT_STR);
+            return simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
 
 
 }
