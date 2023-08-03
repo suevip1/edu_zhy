@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.derby.iapi.util.StringUtil;
 import org.junit.Test;
-import scala.Char;
 
 import java.io.*;
 import java.util.*;
