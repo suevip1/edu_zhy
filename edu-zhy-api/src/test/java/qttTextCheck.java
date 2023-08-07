@@ -18,6 +18,9 @@ public class qttTextCheck {
     private static List<String> stringList = Arrays.asList("内容","商品名称","标题");
 
 
+    //图片筛选list
+    private static List<Integer> imgeList = Arrays.asList(1,2,3,4);
+
 
     //基本读取单列数据
     @org.junit.Test
@@ -291,8 +294,8 @@ public class qttTextCheck {
             String line;
             int i = 0;
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\ceshi\\测试new.json";
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\ceshi\\测试 - 副本.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本 - 副本.json";
 
             File file1 = new File(sourceFile);
 
@@ -308,25 +311,22 @@ public class qttTextCheck {
                 JSONObject result = jsonObject.getJSONObject("result");
                 //更换collection_activity_no+1
                 String collectionActivityNo = result.getString("collection_activity_no");
-                result.put("collection_activity_no",collectionActivityNo+1);
+                result.put("collection_activity_no",collectionActivityNo+"3221");
 
 //                这里把goodId 也给加一
                 JSONArray goodsInfoWithSkuVoList = result.getJSONArray("goods_info_with_sku_vo_list");
+
                 for (int v = 0; v < goodsInfoWithSkuVoList.size(); v++){
                     JSONObject jsonObject1 = goodsInfoWithSkuVoList.getJSONObject(v);
-
                     String goods_id = jsonObject1.getString("goods_id");
-
-                    jsonObject1.put("goods_id",goods_id + 1);
-
-                    jsonArray.add(v,jsonObject1);
+                    jsonObject1.put("goods_id",goods_id + "31009");
                 }
 
-                result.put("goods_info_with_sku_vo_list",jsonArray);
+                result.put("goods_info_with_sku_vo_list",goodsInfoWithSkuVoList);
 
                 jsonObject.put("result",result);
 
-                writer.write(jsonObject.toJSONString());
+                writer.write(jsonObject.toString());
                 writer.write("\n");
 
             }
@@ -398,14 +398,77 @@ public class qttTextCheck {
     }
 
 
-    //商品超过100个的话 只处理100个
+    //商品超过200个的话 只处理200个
     @Test
     public void deletedGoodsInfoWithSkuVoListSize(){
 
         try {
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\ceshi\\测试new.json";
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\ceshi\\测试 - 副本.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
+
+            File file1 = new File(sourceFile);
+
+            FileInputStream fis = new FileInputStream(file1);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+            String line;
+
+            FileWriter writer = new FileWriter(fileResult, true);
+
+            int i = 0;
+
+            while ((line = br.readLine()) != null) {
+                JSONArray jsonArray ;
+                i++;
+                JSONObject jsonObject = JSON.parseObject(line);
+                JSONObject result = jsonObject.getJSONObject("result");
+
+//                这里把goodId 也给加一
+                JSONArray goodsInfoWithSkuVoList = result.getJSONArray("goods_info_with_sku_vo_list");
+
+                //大于200的话只取200个
+                if (goodsInfoWithSkuVoList.size() > 200){
+                    List<Object>  collect = Arrays.stream(goodsInfoWithSkuVoList.stream().toArray()).limit(200).collect(Collectors.toList());
+                    jsonArray = JSONArray.parseArray(JSON.toJSONString(collect));
+                }else {
+                    //没超过200的话就取元数据
+                    jsonArray = goodsInfoWithSkuVoList;
+                }
+
+
+                //先给result 的list进行替换
+                result.put("goods_info_with_sku_vo_list",jsonArray);
+
+                //然后再将 jsonObject的result数据替换
+                jsonObject.put("result",result);
+
+                //写入文档
+                writer.write(jsonObject.toString());
+                writer.write("\n");
+            }
+            System.out.println(i);
+            br.close();
+            writer.close();
+
+        }catch (Exception e){
+            log.error("有问题一定有问题 e:{}",e);
+        }
+
+    }
+
+
+
+    //去除不合规得图片
+    @Test
+    public void deletedWxImageTextVos(){
+
+        JSONArray imgList = new JSONArray();
+        try {
+
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本 - 副本.json";
 
             File file1 = new File(sourceFile);
 
@@ -424,20 +487,28 @@ public class qttTextCheck {
                 JSONObject jsonObject = JSON.parseObject(line);
                 JSONObject result = jsonObject.getJSONObject("result");
 
-//                这里把goodId 也给加一
-                JSONArray goodsInfoWithSkuVoList = result.getJSONArray("goods_info_with_sku_vo_list");
 
-                List<Object> collect = Arrays.stream(goodsInfoWithSkuVoList.stream().toArray()).limit(100).collect(Collectors.toList());
-                JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(collect));
+                JSONArray goodsInfoWithSkuVoList = result.getJSONArray("image_text_vos");
+
+                for (Integer v = 0;v < goodsInfoWithSkuVoList.size();v++){
+                    JSONObject imageTextVo = goodsInfoWithSkuVoList.getJSONObject(v);
+
+                    int type = imageTextVo.getInteger("type");
+
+                    if (imgeList.contains(type)){
+                        imgList.add(v,imageTextVo);
+                    }
+
+                }
 
                 //先给result 的list进行替换
-                result.put("goods_info_with_sku_vo_list",jsonArray);
+                result.put("image_text_vos",imgList);
 
                 //然后再将 jsonObject的result数据替换
                 jsonObject.put("result",result);
 
                 //写入文档
-                writer.write(jsonObject.toString());
+                writer.write(jsonObject.toJSONString());
                 writer.write("\n");
             }
             System.out.println(i);
