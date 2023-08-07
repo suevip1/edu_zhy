@@ -289,8 +289,10 @@ public class qttTextCheck {
     //更换collection_activity_no+1
     @Test
     public void updateGoodId(){
-        JSONArray jsonArray = new JSONArray();
+
         try {
+            String kdtId ="129727684";
+
             String line;
             int i = 0;
 
@@ -311,7 +313,11 @@ public class qttTextCheck {
                 JSONObject result = jsonObject.getJSONObject("result");
                 //更换collection_activity_no+1
                 String collectionActivityNo = result.getString("collection_activity_no");
-                result.put("collection_activity_no",collectionActivityNo+"3221");
+//                String title = result.getString("title");
+
+                result.put("collection_activity_no",collectionActivityNo+ kdtId +i);
+                //这里团购名称也换下以防万一团购名称重复
+//                result.put("title",title+"3221"+i);
 
 //                这里把goodId 也给加一
                 JSONArray goodsInfoWithSkuVoList = result.getJSONArray("goods_info_with_sku_vo_list");
@@ -319,7 +325,11 @@ public class qttTextCheck {
                 for (int v = 0; v < goodsInfoWithSkuVoList.size(); v++){
                     JSONObject jsonObject1 = goodsInfoWithSkuVoList.getJSONObject(v);
                     String goods_id = jsonObject1.getString("goods_id");
-                    jsonObject1.put("goods_id",goods_id + "31009");
+//                    String goods_name = jsonObject1.getString("goods_name");
+
+                    jsonObject1.put("goods_id",goods_id + kdtId +i);
+                    //这里名称也换下以防万一商品名称重复
+//                    jsonObject1.put("goods_name",goods_name + "31009"+i);
                 }
 
                 result.put("goods_info_with_sku_vo_list",goodsInfoWithSkuVoList);
@@ -464,11 +474,12 @@ public class qttTextCheck {
     @Test
     public void deletedWxImageTextVos(){
 
-        JSONArray imgList = new JSONArray();
-        try {
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本 - 副本.json";
+        try {
+            JSONArray imgList = new JSONArray();
+
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
 
             File file1 = new File(sourceFile);
 
@@ -495,14 +506,16 @@ public class qttTextCheck {
 
                     int type = imageTextVo.getInteger("type");
 
-                    if (imgeList.contains(type)){
+                    if (imgeList.contains(type) && Objects.nonNull(type)){
                         imgList.add(v,imageTextVo);
                     }
 
                 }
 
+                System.err.println("第几次:"+i+"\\"+"图片数量:"+imgList.size());
                 //先给result 的list进行替换
                 result.put("image_text_vos",imgList);
+
 
                 //然后再将 jsonObject的result数据替换
                 jsonObject.put("result",result);
@@ -510,6 +523,9 @@ public class qttTextCheck {
                 //写入文档
                 writer.write(jsonObject.toJSONString());
                 writer.write("\n");
+
+                //删除list数据
+                imgList.clear();
             }
             System.out.println(i);
             br.close();
