@@ -4,7 +4,7 @@ package com.edu.zhy.biz.dubboBean;//
 //
 
 
-import com.edu.zhy.api.api.dubboBean.Result.*;
+
 import com.edu.zhy.biz.dubboBean.businessException.ExceptionUtil;
 import com.edu.zhy.biz.dubboBean.businessException.enumerror.CommonErrorCodes;
 import com.edu.zhy.biz.dubboBean.context.ApplicationContextHolder;

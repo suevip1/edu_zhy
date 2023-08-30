@@ -4,6 +4,7 @@ package com.edu.zhy.biz.dubboBean;//
 //
 
 
+import com.edu.zhy.biz.dubboBean.exceptionHandler.ExceptionHandler;
 import com.edu.zhy.biz.dubboBean.exceptionHandler.SimpleLogExceptionHandler;
 import com.edu.zhy.biz.dubboBean.retryStrategy.NeverRetryStrategy;
 import com.edu.zhy.biz.dubboBean.retryStrategy.RetryStrategy;
@@ -98,9 +99,9 @@ public class FacadeTemplateOptions {
     }
 
     public int hashCode() {
-        int PRIME = true;
+        boolean PRIME = true;
         int result = 1;
-        int result = result * 59 + (this.isWithTransaction() ? 79 : 97);
+        result = result * 59 + (this.isWithTransaction() ? 79 : 97);
         Object $retryStrategy = this.getRetryStrategy();
         result = result * 59 + ($retryStrategy == null ? 43 : $retryStrategy.hashCode());
         Object $exceptionHandler = this.getExceptionHandler();

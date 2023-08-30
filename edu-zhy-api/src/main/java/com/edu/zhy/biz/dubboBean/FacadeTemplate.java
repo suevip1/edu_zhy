@@ -4,8 +4,12 @@ package com.edu.zhy.biz.dubboBean;//
 //
 
 
+import com.edu.zhy.biz.dubboBean.Result.CommonResult;
+import com.edu.zhy.biz.dubboBean.Result.RetryCallable;
 import com.edu.zhy.biz.dubboBean.businessException.RpcException;
+import com.edu.zhy.biz.dubboBean.context.ApplicationContextHolder;
 import com.edu.zhy.biz.dubboBean.exceptionHandler.CurrentInvoker;
+import com.edu.zhy.biz.dubboBean.exceptionHandler.ExceptionHandler;
 import com.edu.zhy.biz.dubboBean.retryStrategy.RetryStrategy;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -16,12 +20,12 @@ import java.util.stream.Collectors;
 
 public class FacadeTemplate {
     private static volatile TransactionTemplate transactionTemplate;
-    private static volatile com.youzan.ebiz.domain.template.FacadeTemplateOptions facadeTemplateOptions;
+    private static volatile FacadeTemplateOptions facadeTemplateOptions;
 
     public FacadeTemplate() {
     }
 
-    public static <T> CommonResult<T> run(Callable<T> task, com.youzan.ebiz.domain.template.FacadeTemplateOptions options) {
+    public static <T> CommonResult<T> run(Callable<T> task, FacadeTemplateOptions options) {
         return doExecute(task, options);
     }
 
@@ -30,16 +34,16 @@ public class FacadeTemplate {
     }
 
     public static <T> CommonResult<T> run(Callable<T> task, boolean withTransaction) {
-        com.youzan.ebiz.domain.template.FacadeTemplateOptions options = com.youzan.ebiz.domain.template.FacadeTemplateOptions.builder().withTransaction(withTransaction).build();
+        FacadeTemplateOptions options = FacadeTemplateOptions.builder().withTransaction(withTransaction).build();
         return doExecute(task, options);
     }
 
     public static <T> CommonResult<T> run(Callable<T> task, boolean withTransaction, RetryStrategy retryStrategy) {
-        com.youzan.ebiz.domain.template.FacadeTemplateOptions options = com.youzan.ebiz.domain.template.FacadeTemplateOptions.builder().withTransaction(withTransaction).retryStrategy(retryStrategy).build();
+        FacadeTemplateOptions options = FacadeTemplateOptions.builder().withTransaction(withTransaction).retryStrategy(retryStrategy).build();
         return doExecute(task, options);
     }
 
-    private static <T> CommonResult<T> doExecute(Callable<T> task, com.youzan.ebiz.domain.template.FacadeTemplateOptions options) {
+    private static <T> CommonResult<T> doExecute(Callable<T> task, FacadeTemplateOptions options) {
         CommonResult var3;
         try {
             CurrentInvoker.set(getInvokerClassName());
@@ -84,15 +88,15 @@ public class FacadeTemplate {
 
     private static TransactionTemplate transactionTemplate() {
         if (transactionTemplate == null) {
-            transactionTemplate = (TransactionTemplate)ApplicationContextHolder.getContext().getBean(TransactionTemplate.class);
+            transactionTemplate = (TransactionTemplate) ApplicationContextHolder.getContext().getBean(TransactionTemplate.class);
         }
 
         return transactionTemplate;
     }
 
-    private static com.youzan.ebiz.domain.template.FacadeTemplateOptions facadeTemplateOptions() {
+    private static FacadeTemplateOptions facadeTemplateOptions() {
         if (facadeTemplateOptions == null) {
-            facadeTemplateOptions = (com.youzan.ebiz.domain.template.FacadeTemplateOptions)ApplicationContextHolder.getContext().getBean(com.youzan.ebiz.domain.template.FacadeTemplateOptions.class);
+            facadeTemplateOptions = (FacadeTemplateOptions)ApplicationContextHolder.getContext().getBean(FacadeTemplateOptions.class);
         }
 
         return facadeTemplateOptions;

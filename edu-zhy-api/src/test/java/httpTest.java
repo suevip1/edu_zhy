@@ -1,12 +1,8 @@
 import com.edu.zhy.api.api.util.httpUtil;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import com.edu.zhy.biz.dubboBean.DubboTetherProxy.Builder;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * 访问网页接口Test
@@ -14,16 +10,15 @@ import javax.annotation.Resource;
 @Service
 public class httpTest {
 
-    @Autowired
-    private httpUtil httpUtil;
 
     @Test
     public void httpV1(){
+        httpUtil enhance = Builder.enhance(httpUtil.class);
 
 
         String url = "http://api.polyv.net/live/v3/channel/chat/send-reward-msg";
 
-        HttpRequestBase proxyMethod = httpUtil.getProxyMethod(url, false);
+        HttpRequestBase proxyMethod = enhance.getProxyMethod(url, false);
 
         System.err.println(proxyMethod);
 
