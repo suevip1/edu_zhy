@@ -1,27 +1,22 @@
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSON;
-import com.edu.zhy.api.api.dto.AddressTypeEnum;
-import com.edu.zhy.api.api.dto.ExcelKttOrderDTO;
-import com.edu.zhy.api.api.dto.UserDTO;
-import com.edu.zhy.api.api.dto.yzScrmExcelDTO;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.edu.zhy.api.api.dto.*;
 import com.edu.zhy.api.api.service.impl.zhyService;
 import com.google.common.collect.Lists;
 import jxl.Sheet;
 import jxl.Workbook;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,7 +34,7 @@ public class excelXlTest {
 
 
     //需要提前新建目录  写入的文件名称
-    private static final String FILE_NAME = "C:\\Users\\Admin\\Desktop\\excel\\新建 Microsoft Excel 工作表.xlsx";
+    private static final String FILE_NAME = "C:\\Users\\Admin\\Desktop\\excel\\10.xlsx";
 
 
     //每行的行数
@@ -59,25 +54,180 @@ public class excelXlTest {
 
 
     @Test
-    public void m1() {
+    public void hotfixSignUp() {
+        //报名表单  创建接口数据解析,打印成文档
+        List<hotfix> list = new ArrayList<>();
 
-        Integer num =28;
-        Integer m1=14;
+        try {
+            int i = 0;
+            String line;
 
-        int i = num % m1;
-        System.err.println(i);
+            String sourceFile = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\hotfix1111.txt";
 
-//
-//        try {
-//
-//            zhyService.afterProcess(1);
-//        } catch (Exception e) {
-//            log.error("调用接口有问题出错了 e:{}", e);
-//            return;
-//        }
+//            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\ceshi\\空文档.json";
+
+            File file1 = new File(sourceFile);
+
+            FileInputStream fis = new FileInputStream(file1);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+//            FileWriter writer = new FileWriter(fileResult, true);
+
+            while ((line = br.readLine()) != null) {
+                i++;
+                JSONObject jsonObject = JSON.parseObject(line);
+                String format = jsonObject.getString("format");
+
+
+                hotfixList(format,list);
+//                writer.write(resultLine);
+//                writer.write("\n");
+            }
+            System.out.println(i);
+            br.close();
+//            writer.close();
+
+
+        // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+        EasyExcel.write(FILE_NAME, hotfix.class).sheet("有赞报名表单提交数据").doWrite(list);
+
+        //写数据
+        }catch (Exception e){
+            log.error("失败了 e:{}", e);
+        }
+
 
 
     }
+
+    /**
+     * *解析数据收拢到list里面
+     * @param format
+     * @param list
+     */
+    public void hotfixList(String format,List<hotfix> list){
+
+        //读取
+//        String format = "\n[_facade]\ntags [ class=EnrollFacadeImpl, method=createRegistrationInfo, success=true, timeCost=79, multiple=0 ]\n__req:[116310406,{\"checkCaptcha\":false,\"featureAlias\":\"q4Njmkefez\",\"isHomepage\":false,\"regInfo\":[{\"itemId\":10811933,\"itemValue\":\"1\"},{\"itemId\":10811946,\"itemValue\":\"15001100271\"},{\"itemId\":10811948,\"itemValue\":\"北京\"},{\"itemId\":10843102,\"itemValue\":\"800元—💗*1\"}],\"smsCaptcha\":\"\",\"stuName\":\"\",\"stuTel\":\"15001100271\",\"userId\":17249689809}]\n__rsp:{\"code\":200,\"data\":240392,\"message\":\"successful\",\"statusCode\":\"01@@@554@010200\",\"success\":true}";
+        //先拿string截取
+        String s = subBeforePushStream(format);
+
+        String s1 = subAfterStreamKeyUrl(s);
+
+//        int indexOf = s1.indexOf(":", 0);
+
+//        String s2 = Optional.ofNullable(s1.substring(indexOf+1)).orElse(null);
+
+        int indexOf1 = s1.indexOf(",", 0);
+
+        String s3 = Optional.ofNullable(s1.substring(indexOf1+1)).orElse(null);
+
+        int indexOf2 = s3.lastIndexOf("]");
+
+        String s4 = Optional.ofNullable(s3.substring(0,indexOf2)).orElse(null);
+
+
+        JSONObject object = JSON.parseObject(s4);
+
+
+        JSONArray regInfo = object.getJSONArray("regInfo");
+
+        hotfix hotfix = new hotfix();
+        for (Integer v = 0;v < regInfo.size();v++){
+            JSONObject imageTextVo = regInfo.getJSONObject(v);
+
+            int itemId = imageTextVo.getInteger("itemId");
+
+            String itemValue = imageTextVo.getString("itemValue");
+
+            Map<String, String> map = appedHotfix(itemId, itemValue);
+
+            if (map.containsKey("姓名")){
+                hotfix.setName(map.get("姓名"));
+            }
+
+            if (map.containsKey("手机")){
+                hotfix.setPhone(map.get("手机"));
+            }
+
+            if (map.containsKey("地址")){
+                hotfix.setAdress(map.get("地址"));
+            }
+
+            if (map.containsKey("捐赠")){
+                hotfix.setPay(map.get("捐赠"));
+            }
+
+
+        }
+
+        list.add(hotfix);
+
+
+    }
+
+
+
+    public Map<String,String> appedHotfix(int itemId, String itemValue){
+        Map<String,String> map = new HashMap<>() ;
+        switch (itemId) {
+            case 10811933:
+            case 10904700:
+//                System.out.print("姓名：" + itemValue);
+                map.put("姓名",itemValue);
+                break;
+
+            case 10811946:
+//                System.out.print(", 联系人手机：" + itemValue);
+                map.put("手机",itemValue);
+                break;
+            case 10811948:
+//                System.out.print(", 礼品地址：" + itemValue);
+                map.put("地址",itemValue);
+                break;
+            case 10843102:
+//                System.out.print(", 爱心捐赠：" + itemValue);
+                map.put("捐赠",itemValue);
+
+                break;
+        }
+
+        return map;
+    }
+
+
+
+    /**
+     * *长码截取 获取服务器地址
+     * @param url
+     * @return
+     */
+    public String subBeforePushStream(String url) {
+        if (StringUtils.isEmpty(url)){
+            return null;
+        }
+        //前置截取
+        int indexOf = url.lastIndexOf("_");
+
+        return Optional.ofNullable(url.substring(0, indexOf-1)).orElse(null);
+    }
+
+    /**
+     * *长码截取 获取串流密钥/推广码
+     * @param url
+     * @return
+     */
+    public String subAfterStreamKeyUrl(String url) {
+        if (StringUtils.isEmpty(url)){
+            return null;
+        }
+
+        int indexOf = url.lastIndexOf("_");
+
+        return Optional.ofNullable(url.substring(indexOf+1)).orElse(null);
+    }
+
 
 
     @Test

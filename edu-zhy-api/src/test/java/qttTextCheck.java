@@ -3,19 +3,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.derby.iapi.util.StringUtil;
 import org.junit.Test;
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 public class qttTextCheck {
 
     //风控筛选list
-    private static List<String> stringList = Arrays.asList("内容","商品名称","标题");
+    private static List<String> stringList = Arrays.asList("内容","商品名称","标题","敏感词");
 
 
     //图片筛选list
@@ -96,7 +94,7 @@ public class qttTextCheck {
         //全量文档
         String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
         //写入结果
-        String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\ceshiall.txt";
+        String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
 
 
         FileWriter writer = new FileWriter(fileResult, true);
@@ -148,6 +146,9 @@ public class qttTextCheck {
 
             System.err.println("不是敏感词的外部业务标识:"+noSensitiveWordsList);
 
+            System.err.println("不是敏感词的外部业务标识的长度:"+noSensitiveWordsList.size());
+
+
             writer.close();
 
 
@@ -171,8 +172,9 @@ public class qttTextCheck {
 
         try {
 
-            String sourceFile = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\ceshiall.txt";
-            String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\ceshixieruweijinci.txt";
+            String sourceFile = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
+
+            String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsFilter.txt";
 
             File file1 = new File(sourceFile);
 
@@ -555,7 +557,7 @@ public class qttTextCheck {
 //
 //            String sourceFileAll = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
 //
-//            String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\ceshiall.txt";
+//            String fileResult = "";
 //            //差外围的error
 //            BufferedReader bufferedReader = toBufferedReader(sourceFile);
 //            //查全部的
