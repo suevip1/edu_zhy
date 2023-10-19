@@ -1,4 +1,4 @@
-package com.edu.zhy.api.api.http.service;
+package com.edu.zhy.api.api.http.service.httputiljiagou;
 
 import com.edu.zhy.api.api.http.dto.AbstractHttpParam;
 import com.edu.zhy.api.api.http.dto.AbstractHttpRequest;
@@ -12,7 +12,10 @@ import com.edu.zhy.api.api.http.dto.AbstractHttpResponse;
  */
 public interface HttpUtilService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T extends AbstractHttpResponse> {
 
-    //路由的类型
+    /**
+     * * 路由的类型
+     * @return
+     */
     Integer getHttpType();
 
     /**
