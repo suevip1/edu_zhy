@@ -1,6 +1,7 @@
+import com.edu.zhy.api.api.http.polyv.PolyvHttpUtil;
+import com.edu.zhy.api.api.util.ApplicationContextHelper;
 import com.edu.zhy.api.api.util.httpUtil;
 import com.edu.zhy.biz.dubboBean.DubboTetherProxy.Builder;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.junit.Test;
 import org.springframework.stereotype.Service;
 
@@ -10,17 +11,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class httpTest {
 
+    private PolyvHttpUtil httpUtil;
 
     @Test
     public void httpV1(){
         httpUtil enhance = Builder.enhance(httpUtil.class);
 
 
-        String url = "http://api.polyv.net/live/v3/channel/chat/send-reward-msg";
+//        String url = "http://api.polyv.net/live/v3/channel/chat/send-reward-msg";
+//
+//        HttpRequestBase proxyMethod = enhance.getProxyMethod(url, false);
+//
+//        System.err.println(proxyMethod);
 
-        HttpRequestBase proxyMethod = enhance.getProxyMethod(url, false);
+        httpUtil = ApplicationContextHelper.getBean(PolyvHttpUtil.class);
 
-        System.err.println(proxyMethod);
+
+
+        System.err.println(httpUtil);
+
 
 
     }

@@ -1,20 +1,34 @@
 import com.alibaba.fastjson.JSON;
 import com.edu.zhy.api.api.dto.OfflineOrderHandleContext;
-import com.edu.zhy.api.api.dto.TradeOrderEvent;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Test {
+
+    //线程池
+    private ThreadPoolExecutor threadPoolExecutor
+            = new ThreadPoolExecutor(15, 30,
+            0, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(1024),
+            new ThreadFactoryBuilder().setNameFormat("ThreadPool-%d").build());
+
+
+
 
     private static final String CREATE = "2022-12-01 23:59:59";
 
@@ -71,6 +85,42 @@ public class Test {
 //
 //    }
 
+    @org.junit.Test
+    public void m13 (){
+//        Integer k =0;
+//        List<TradeOrderEvent> list = new ArrayList();
+//        TradeOrderEvent tradeOrderEvent2 = new TradeOrderEvent();
+//        tradeOrderEvent2.setMin(10);
+//        tradeOrderEvent2.setMax(15);
+//        list.add(tradeOrderEvent2);
+//
+//        TradeOrderEvent tradeOrderEvent = new TradeOrderEvent();
+//        tradeOrderEvent.setMin(8);
+//        tradeOrderEvent.setMax(10);
+//        list.add(tradeOrderEvent);
+//
+//        TradeOrderEvent tradeOrderEvent1 = new TradeOrderEvent();
+//        tradeOrderEvent1.setMin(6);
+//        tradeOrderEvent1.setMax(8);
+//        list.add(tradeOrderEvent1);
+//
+//        for (int i = 0; i < list.size() - 1; i++) {
+//            k++;
+//            if (list.get(i).getMax() > list.get(i + 1).getMin()) {
+//                System.err.println(list.get(i).getMax());
+//                System.err.println(list.get(i + 1).getMin());
+//            }
+//
+//            System.err.println("k"+k);
+//        }
+
+
+        System.err.println(15 % 1);
+
+
+    }
+
+
 
     @org.junit.jupiter.api.Test
     public void m12 (){
@@ -117,18 +167,71 @@ public class Test {
 
     @org.junit.Test
     public void timeM1 (){
-        List<Integer> list = new ArrayList<>();
 
-        System.err.println(convertTimeUpdatedAt(CREATE).before(convertTimeUpdatedAt(DATE)));
+//        List<Integer> list = new ArrayList<>();
+//
+//        System.err.println(convertTimeUpdatedAt(CREATE).before(convertTimeUpdatedAt(DATE)));
+//
+//        if (convertTimeUpdatedAt(CREATE).before(convertTimeUpdatedAt(DATE))
+//                && convertTimeUpdatedAt(UPDATE).before(convertTimeUpdatedAt(DATE))){
+//            list.add(1);
+//        }
+//
+//        System.err.println(list);
+        List<String> lists= Arrays.asList("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19");
+//        lists.parallelStream().forEach(o ->{
+//
+//            System.err.println(o+"时间:"+new Date());
+//        });
 
-        if (convertTimeUpdatedAt(CREATE).before(convertTimeUpdatedAt(DATE))
-                && convertTimeUpdatedAt(UPDATE).before(convertTimeUpdatedAt(DATE))){
-            list.add(1);
-        }
+        lists.stream().forEach(o ->{
 
-        System.err.println(list);
+            threadPoolExecutor.submit(() ->{
+
+                System.err.println(o+"时间:"+ System.currentTimeMillis());
+            });
+
+        });
+
+
+
+
+
+
+//        threadPoolExecutor.execute(() -> {
+//            lists.stream().forEach(o ->{
+//                System.err.println(o+"时间:"+ System.currentTimeMillis());
+//            });
+//
+//        });
+
+
 
     }
+
+    /**
+     * *测试  CompletableFuture
+     */
+    public void  testCompletableFuture(List<String> lists){
+        Integer i = 1;
+//        lists.stream().map(o ->{
+//
+//            return o;
+//        }).collect(Collectors.toList());
+
+        for (String o : lists){
+            i++;
+            lists.add(String.valueOf(i));
+        }
+
+
+    }
+
+
+
+
+
+
 
     @org.junit.Test
     public void timeM2 (){
@@ -169,22 +272,22 @@ public class Test {
 
     @org.junit.Test
     public void hotfixString(){
-        //错误文档
-        String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\hotfix.txt";
-
-        List<String> lines1 = readLinesFromFile(errorFilePath);
-
-        String toJSONString = lines1.get(0);
-
-        System.err.println(toJSONString);
-
-        String s = JSON.toJSONString(toJSONString);
-
-
-//        System.err.println(s);
-
-
-        TradeOrderEvent tradeOrderEvent = JSON.parseObject(toJSONString, TradeOrderEvent.class);
+//        //错误文档
+//        String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\hotfix.txt";
+//
+//        List<String> lines1 = readLinesFromFile(errorFilePath);
+//
+//        String toJSONString = lines1.get(0);
+//
+//        System.err.println(toJSONString);
+//
+//        String s = JSON.toJSONString(toJSONString);
+//
+//
+////        System.err.println(s);
+//
+//
+//        TradeOrderEvent tradeOrderEvent = JSON.parseObject(toJSONString, TradeOrderEvent.class);
 
 //        System.err.println(tradeOrderEvent);
 
@@ -203,17 +306,71 @@ public class Test {
 //
 //        System.err.println(JSON.toJSON(tradeOrderEvent));
 
-//
-//        String sss = "{\"type\":2,\"origin\":1,\"data\":\"{\\\"activityType\\\":1,\\\"bizCategory\\\":\\\"COMMON\\\",\\\"bizTags\\\":{\\\"edu\\\":false,\\\"flowTypeValue\\\":839122975,\\\"fx\\\":false,\\\"fxModeType\\\":0,\\\"multiGoodsTypeModelType\\\":0,\\\"normal\\\":true,\\\"purchase\\\":false,\\\"salesModelType\\\":0,\\\"wholesaleOrder\\\":false},\\\"buyerDTO\\\":{\\\"beneficiary\\\":\\\"\\\",\\\"buyerId\\\":16062409576,\\\"buyerPhone\\\":\\\"18842778053\\\",\\\"fansId\\\":11747276020,\\\"fansType\\\":9},\\\"channelType\\\":\\\"YOUZAN\\\",\\\"closeReason\\\":\\\"\\\",\\\"closeType\\\":\\\"NORMAL\\\",\\\"closeTypeValue\\\":0,\\\"consumeStatus\\\":\\\"\\\",\\\"contractId\\\":2959404371319717908,\\\"createTime\\\":1692843877000,\\\"expiredTime\\\":1692845677987,\\\"extra\\\":{\\\"IS_OFFLINE\\\":\\\"0\\\",\\\"forceConsignmentMode\\\":\\\"0\\\",\\\"IS_ALL_SUB_ORDER_CANCEL\\\":\\\"1\\\",\\\"weAppPrepayId\\\":\\\"wx24102445989507de0c2b75cf64e9ef0000\\\",\\\"IS_MEMBER\\\":\\\"false\\\",\\\"PRRINCIPAL_CERT_TYPE\\\":\\\"2\\\",\\\"NEED_STOCK_UP\\\":\\\"0\\\",\\\"IS_USE_PARAM_PRICE\\\":\\\"0\\\",\\\"IS_SPLIT_STOCK_DEDUCT\\\":\\\"true\\\",\\\"BRAND_CERT_TYPE\\\":\\\"1\\\",\\\"OWNER_ID\\\":\\\"0\\\",\\\"FEE_MIGRATE_CHARGE_BY_TC\\\":\\\"true\\\",\\\"excludePayToolCode\\\":\\\"56,49,40\\\",\\\"CREATE_BY_NEW_TABLE\\\":\\\"1\\\",\\\"BUYER_PHONE\\\":\\\"18842778053\\\",\\\"PREPAY_RESULT\\\":\\\"{\\\\\\\"cashierSign\\\\\\\":\\\\\\\"19A7B226F5DEEAB647AD8D32B7DD388C\\\\\\\",\\\\\\\"acquireOrder\\\\\\\":\\\\\\\"2308241024382622060538\\\\\\\",\\\\\\\"cashierUrl\\\\\\\":\\\\\\\"https://cashier.youzan.com/pay/buyer?prepay_id=PT1775075462479873&cashier_sign=19A7B226F5DEEAB647AD8D32B7DD388C&cashier_salt=1692843878350&partner_id=810006274300&from=trade-core\\\\\\\",\\\\\\\"cashierSalt\\\\\\\":\\\\\\\"1692843878350\\\\\\\",\\\\\\\"partnerId\\\\\\\":\\\\\\\"810006274300\\\\\\\",\\\\\\\"prepayId\\\\\\\":\\\\\\\"PT1775075462479873\\\\\\\"}\\\",\\\"IS_BOS_FLOW\\\":\\\"true\\\",\\\"excludePayTool\\\":\\\"PF_OFFLINE_PAY,INSTALMENT,PRIOR_USE\\\",\\\"ENABLE_ACROSS_SHOP_VERIFY\\\":\\\"1\\\",\\\"WX_PAY_SYNC_SUCCESS\\\":\\\"true\\\",\\\"bankCardWaterNo\\\":\\\"\\\",\\\"WEAPP_TRADE_MODULE_STATUS\\\":\\\"1\\\",\\\"PAY_RETURN_URL\\\":\\\"https://shop42398976.youzan.com/wscvis/order/paid-status?orderNo={orderNo}&alias=2ovd28urkes1k&kdt_id=42206808\\\",\\\"FROM_CART\\\":\\\"true\\\",\\\"INNER_TRANSACTION_NO\\\":\\\"2308241024450002150538\\\",\\\"channelPayerId\\\":\\\"o0evEw3FHXxqSc9ratR60USIHzj0\\\",\\\"extend_version\\\":\\\"5\\\",\\\"USE_NEW_SNAPSHOT\\\":\\\"1\\\",\\\"IS_PREPAY\\\":\\\"true\\\",\\\"DECREASE\\\":\\\"5748\\\",\\\"ORDER_FROM_METHOD\\\":\\\"create\\\",\\\"IS_MERGE_PREPAY\\\":\\\"0\\\",\\\"OUTER_TRANSACTION_NO\\\":\\\"4200001949202308246520667139\\\",\\\"channelAppId\\\":\\\"wx818e0889f5f66323\\\",\\\"srcEnv\\\":\\\"prod\\\",\\\"SHOP_TOPIC\\\":\\\"1\\\",\\\"IS_POINTS_ORDER\\\":\\\"0\\\",\\\"USE_STORED_CUSTOMER_DISCOUNT\\\":\\\"false\\\",\\\"ATTR_FINANCE_TURNOVER_RANGE\\\":\\\"0011\\\",\\\"FANS\\\":\\\"{\\\\\\\"fansId\\\\\\\":11747276020,\\\\\\\"fansNickName\\\\\\\":\\\\\\\"印章公司副总裁\\\\\\\",\\\\\\\"outerUserId\\\\\\\":\\\\\\\"oHIuuji58OnsZnZh_IDLWW8cIMKY\\\\\\\",\\\\\\\"type\\\\\\\":9,\\\\\\\"youzanFansId\\\\\\\":11747276020}\\\",\\\"RISK_CONTROL_SEQ\\\":\\\"1775075457499882\\\",\\\"mchId\\\":\\\"181205100826000003\\\",\\\"IS_NEW_CROSS_BORDER_TARIFF_STRATEGY\\\":\\\"false\\\",\\\"PREPAY_SUCCESS\\\":\\\"true\\\",\\\"ORDER_TYPE\\\":\\\"0\\\",\\\"WEAPP_TRADE_MODULE_TICKET\\\":\\\"0\\\",\\\"BIZ_ORDER_ATTRIBUTE\\\":\\\"{\\\\\\\"EDU_ORDER_EVALUATE_STATE\\\\\\\":\\\\\\\"1\\\\\\\"}\\\",\\\"payTool\\\":\\\"WX_JS\\\",\\\"STOCK_DEDUCT_SCENE\\\":\\\"0\\\",\\\"FISSION_TICKET_NUM\\\":\\\"0\\\",\\\"WECHAT_SYNC_SHOPPING_LIST\\\":\\\"0\\\",\\\"AD_CPS_SHOP\\\":\\\"1\\\",\\\"REAL_PAY_AMOUNT\\\":\\\"15745\\\",\\\"BUYER_NAME\\\":\\\"印章公司副总裁\\\"},\\\"goodsType\\\":31,\\\"id\\\":2959404371319717909,\\\"logisticsDTO\\\":{\\\"extra\\\":{},\\\"logisticsType\\\":\\\"NONE\\\",\\\"receiverName\\\":\\\"\\\"},\\\"logisticsType\\\":3,\\\"memo\\\":\\\"\\\",\\\"orderItemDTOGroup\\\":[{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"2ovd28urkes1k\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100000\\\"},\\\"goods_id\\\":446176469,\\\"goods_no\\\":\\\"突击课·C语言\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fj-ac9t9Sh3qOrqh-LBI9_Bvm7dD.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"突击课·C语言\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《C语言》3h突击课\\\"},\\\"id\\\":2959404371319717910,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":2738,\\\"skuDTO\\\":{\\\"currentPrice\\\":3999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fj-ac9t9Sh3qOrqh-LBI9_Bvm7dD.png\\\",\\\"name\\\":\\\"《C语言》3h突击课\\\",\\\"originPrice\\\":3999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":446176469,\\\"skuId\\\":36257816},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"2dc4c135de174ad4e8c0e963601f729d\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}},{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"26u6ybv2p95nc\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100001\\\"},\\\"goods_id\\\":448367503,\\\"goods_no\\\":\\\"突击课·气体与热力学\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fni-whW2IUzMWZmAW_Uhm4AOqx8e.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"突击课·气体与热力学\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《气体与热力学》1.5h突击课\\\"},\\\"id\\\":2959404371319717911,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":1368,\\\"skuDTO\\\":{\\\"currentPrice\\\":1999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fni-whW2IUzMWZmAW_Uhm4AOqx8e.png\\\",\\\"name\\\":\\\"《气体与热力学》1.5h突击课\\\",\\\"originPrice\\\":1999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":448367503,\\\"skuId\\\":36261195},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"1d9aaed88ec8decf47a532bbd55fc8a4\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}},{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"2xk7sse9qqgs8\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100002\\\"},\\\"goods_id\\\":446691245,\\\"goods_no\\\":\\\"突击课·振动与波动\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fow1sWamOYkHlm11xnQkMlxjSzW-.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"突击课·振动与波动\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《振动与波动》1h突击课\\\"},\\\"id\\\":2959404371319717912,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":683,\\\"skuDTO\\\":{\\\"currentPrice\\\":999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fow1sWamOYkHlm11xnQkMlxjSzW-.png\\\",\\\"name\\\":\\\"《振动与波动》1h突击课\\\",\\\"originPrice\\\":999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":446691245,\\\"skuId\\\":36253167},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"8e5f545ebf5cc4651aa94c403a6202e3\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}},{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"3eo3xbp8jblq0\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100003\\\"},\\\"goods_id\\\":446196541,\\\"goods_no\\\":\\\"突击课·力学\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fu4irVaYaDayVFy1x-67cIFe3N5g.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"突击课·力学\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《力学》3h突击课\\\"},\\\"id\\\":2959404371319717913,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":1368,\\\"skuDTO\\\":{\\\"currentPrice\\\":1999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fu4irVaYaDayVFy1x-67cIFe3N5g.png\\\",\\\"name\\\":\\\"《力学》3h突击课\\\",\\\"originPrice\\\":1999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":446196541,\\\"skuId\\\":36256659},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"1312aa8796731ea2cc149a366845c50c\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}},{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"361pp4y4z7at4\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100004\\\"},\\\"goods_id\\\":446127374,\\\"goods_no\\\":\\\"速成课·高数下\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/FjK69VhPkaAv_x8RHcOvD3jDRjMR.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"速成课·高数下\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《高数下》4h突击课\\\"},\\\"id\\\":2959404371319717914,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":2738,\\\"skuDTO\\\":{\\\"currentPrice\\\":3999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/FjK69VhPkaAv_x8RHcOvD3jDRjMR.png\\\",\\\"name\\\":\\\"《高数下》4h突击课\\\",\\\"originPrice\\\":3999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":446127374,\\\"skuId\\\":36262289},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"0fc73b2ebb2ff68c8319c0b4ae2cc9bd\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}},{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"2onz62r3d5uzs\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100005\\\"},\\\"goods_id\\\":885260841,\\\"goods_no\\\":\\\"突击课·信号与系统\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/FgPboE2Gt0Ih8dVzGMcLRy-e4YqL.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"突击课·信号与系统\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《信号与系统》4h突击课\\\"},\\\"id\\\":2959404371319717915,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":4110,\\\"skuDTO\\\":{\\\"currentPrice\\\":5999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/FgPboE2Gt0Ih8dVzGMcLRy-e4YqL.png\\\",\\\"name\\\":\\\"《信号与系统》4h突击课\\\",\\\"originPrice\\\":5999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":885260841,\\\"skuId\\\":37126555},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"db1b1c06053134393c6345f038625767\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}},{\\\"extra\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"HEAD_SHOP_GOODS_STOCK\\\":\\\"1\\\",\\\"BIZ_ITEM_ATTRIBUTE\\\":\\\"{}\\\",\\\"RECOMMEND_GIFT\\\":\\\"{\\\\\\\"buyerId\\\\\\\":0,\\\\\\\"fansId\\\\\\\":0,\\\\\\\"fansType\\\\\\\":0}\\\",\\\"BIZ_TRACE_POINT\\\":\\\"{\\\\\\\"cartCreateTime\\\\\\\":0,\\\\\\\"cartUpdateTime\\\\\\\":0,\\\\\\\"extension\\\\\\\":{\\\\\\\"biz\\\\\\\":\\\\\\\"wsc\\\\\\\",\\\\\\\"uuid\\\\\\\":\\\\\\\"11747276020\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"h5\\\\\\\"}}\\\",\\\"FX_MODE\\\":\\\"1\\\"},\\\"goodsInfo\\\":{\\\"alias\\\":\\\"1y5d8u5xsvjrc\\\",\\\"bizMarkCode\\\":\\\"000000000031\\\",\\\"buy_way\\\":1,\\\"categoryList\\\":[\\\"其他\\\"],\\\"class1\\\":0,\\\"class2\\\":\\\"\\\",\\\"extra\\\":{\\\"weight\\\":0.0},\\\"extraMap\\\":{\\\"DELIVER_TIME\\\":\\\"0\\\",\\\"ABILITY_MARK_CODES\\\":\\\"[10037,10020,90003,10023]\\\",\\\"ITEM_UNIQ_ID\\\":\\\"100006\\\"},\\\"goods_id\\\":446197976,\\\"goods_no\\\":\\\"突击课·电路\\\",\\\"img_url\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fg45yInd-FIvbvzBNegrRX_YO1PX.png\\\",\\\"isSupportInstallment\\\":false,\\\"is_virtual\\\":2,\\\"mark\\\":0,\\\"needCustomsCheck\\\":false,\\\"needCustomsInfo\\\":false,\\\"needCustomsPicture\\\":false,\\\"new_goods_no\\\":\\\"突击课·电路\\\",\\\"parentGoodsId\\\":0,\\\"points_price\\\":0,\\\"purchaseRight\\\":false,\\\"quota\\\":0,\\\"quotaType\\\":\\\"NO\\\",\\\"title\\\":\\\"《电路》4h突击课\\\"},\\\"id\\\":2959404371319717916,\\\"memo\\\":\\\"\\\",\\\"num\\\":1,\\\"quotaNum\\\":0,\\\"realPay\\\":2740,\\\"skuDTO\\\":{\\\"currentPrice\\\":3999,\\\"imageUrl\\\":\\\"https://img.yzcdn.cn/upload_files/2023/07/25/Fg45yInd-FIvbvzBNegrRX_YO1PX.png\\\",\\\"name\\\":\\\"《电路》4h突击课\\\",\\\"originPrice\\\":3999,\\\"skuCode\\\":\\\"\\\",\\\"skuCompositeId\\\":{\\\"goodsId\\\":446197976,\\\"skuId\\\":36262003},\\\"skuMap\\\":\\\"[]\\\",\\\"type\\\":\\\"KNOWLEDGE\\\"},\\\"snapShot\\\":\\\"498286e5a89844edee170a588e57b2d9\\\",\\\"tags\\\":{\\\"IS_VIRTUAL\\\":true}}],\\\"orderNo\\\":\\\"E20230824102437087200081\\\",\\\"orderStatus\\\":\\\"PAID\\\",\\\"orderType\\\":\\\"NORMAL\\\",\\\"outBizNo\\\":\\\"E20230824102437087200081\\\",\\\"payId\\\":\\\"2308241024382622060538\\\",\\\"payTime\\\":1692843894412,\\\"payType\\\":2,\\\"payWay\\\":\\\"WXPAY_DAIXIAO\\\",\\\"phase\\\":1,\\\"priceDTO\\\":{\\\"currentPrice\\\":15745,\\\"originPrice\\\":22993,\\\"postage\\\":0,\\\"promotionAmount\\\":0,\\\"totalPrice\\\":15745},\\\"promotion\\\":{\\\"changeType\\\":\\\"ump_order\\\",\\\"extra\\\":\\\"{\\\\\\\"condition\\\\\\\":\\\\\\\"满100元使用\\\\\\\",\\\\\\\"groupType\\\\\\\":7,\\\\\\\"couponType\\\\\\\":\\\\\\\"card\\\\\\\",\\\\\\\"couponId\\\\\\\":12943707130}\\\",\\\"newValue\\\":15745,\\\"oldValue\\\":17245,\\\"promotionAlias\\\":\\\"\\\",\\\"promotionId\\\":26813919,\\\"promotionName\\\":\\\"满100减15元券\\\",\\\"promotionType\\\":\\\"coupon\\\",\\\"promotionTypeId\\\":105,\\\"promotionTypeName\\\":\\\"优惠卡券\\\"},\\\"salesModelType\\\":0,\\\"sellerDTO\\\":{\\\"kdtId\\\":42206808,\\\"payKdtId\\\":42206808,\\\"rootKdtId\\\":0,\\\"shopId\\\":0,\\\"shopName\\\":\\\"蜂考旗舰店\\\",\\\"shopType\\\":\\\"NORMAL\\\",\\\"teamType\\\":\\\"WSC\\\"},\\\"source\\\":\\\"{\\\\\\\"bookKey\\\\\\\":\\\\\\\"ce3fe720-a17f-4d24-9505-efb555d12ef5\\\\\\\",\\\\\\\"clientIp\\\\\\\":\\\\\\\"112.41.192.56\\\\\\\",\\\\\\\"fromThirdApp\\\\\\\":false,\\\\\\\"isOnlineOrder\\\\\\\":true,\\\\\\\"isReceiveMsg\\\\\\\":1,\\\\\\\"newSource\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"platformEnum\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"WX\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"wxEntranceEnum\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"DIRECT_BUY\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"platform\\\\\\\":\\\\\\\"weixin\\\\\\\",\\\\\\\"source\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"kdtId\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"42206808\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"clientIp\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"112.41.192.56\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"platform\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"weixin\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"isReceiveMsg\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"1\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"userAgent\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"Mozilla/5.0 (Linux; Android 8.1.0; BKK-AL10 Build/HONORBKK-AL10; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/9004425 MMWEBSDK/20230604 Mobile Safari/537.36 MMWEBID/2\\\\\\\",\\\\\\\"tradeMarks\\\\\\\":[]}\\\",\\\"tags\\\":{\\\"MESSAGE_NOTIFY\\\":true,\\\"IS_VIRTUAL\\\":true,\\\"USE_UMP_PROMOTION\\\":true,\\\"IS_SECURED_TRANSACTIONS\\\":true,\\\"USE_UMP_COUPON\\\":true,\\\"IS_PAYED\\\":true},\\\"updateTime\\\":1692843886219}\",\"orderType\":1,\"version\":2,\"extMap\":null,\"uniqueKey\":\"OTC_GtCqUvYcIqfFvChPmhpYCnJGsUZfuJYifDfJrmsASqAXEVOW\",\"__class__\":\"com.youzan.owl.goingmerry.api.event.TradeOrderEvent\"}";
-//
-//
-//        System.err.println(sss.toString());
 
-//         TradeOrderEvent tradeOrderEvent = JSON.parseObject(sss, TradeOrderEvent.class);
+//        String sss = "[{\"attributeId\":8203224,\"attributeKey\":\"edu_stuName\",\"attributeTitle\":\"学员姓名\",\"dataType\":0,\"value\":\"潘萱\"},{\"attributeId\":8203231,\"attributeKey\":\"edu_stuContractPhone\",\"attributeTitle\":\"联系人手机\",\"dataType\":9,\"value\":\"15912523757\"},{\"attributeId\":8546731,\"attributeKey\":\"\",\"attributeTitle\":\"所在城市\",\"dataType\":7},{\"attributeId\":8213682,\"attributeKey\":\"edu_school\",\"attributeTitle\":\"就读学校\",\"dataType\":0},{\"attributeId\":8217414,\"attributeKey\":\"\",\"attributeTitle\":\"学生开学年级\",\"dataType\":7,\"value\":\"新4年级\"},{\"attributeId\":8688908,\"attributeKey\":\"\",\"attributeTitle\":\"礼品寄送地区\",\"dataType\":3,\"value\":\"云南省 昆明市 盘龙区\"},{\"attributeId\":8274126,\"attributeKey\":\"\",\"attributeTitle\":\"寄送详细地址\",\"dataType\":0,\"value\":\"美术小区\"},{\"attributeId\":8298915,\"attributeKey\":\"\",\"attributeTitle\":\"城市\",\"dataType\":0},{\"attributeId\":8465209,\"attributeKey\":\"\",\"attributeTitle\":\"上课手机号\",\"dataType\":1},{\"attributeId\":8609567,\"attributeKey\":\"\",\"attributeTitle\":\"在读班级\",\"dataType\":7},{\"attributeId\":8676705,\"attributeKey\":\"\",\"attributeTitle\":\"新学员年级\",\"dataType\":7},{\"attributeId\":8708233,\"attributeKey\":\"\",\"attributeTitle\":\"班级\",\"dataType\":0},{\"attributeId\":8711987,\"attributeKey\":\"\",\"attributeTitle\":\"介绍人联系方式\",\"dataType\":1},{\"attributeId\":10628702,\"attributeKey\":\"\",\"attributeTitle\":\"团长上课手机号\",\"dataType\":1,\"value\":\"0\"}]";
+//        System.err.println(JSON.toJSON(sss));
+
+        String ss1 ="{\"result\":{\"collection_activity_no\":\"0ju8be95j-fONmN30eJr2XQcA6t4x3SA\",\"goods_info_with_sku_vo_list\":[{\"goods_id\":527760301825,\"goods_name\":\"【资质齐全】Dyson戴森吹风机HD08护发 礼盒款\",\"goods_desc\":\"保证正品！送戴森气垫按摩梳，送完即止！\",\"price\":119900,\"pic_url_list\":[\"https://commimg.pddpic.com/monica/2023-05-27/ce5c5ed5-ea00-40a2-be1f-0c74d08bdb40.jpeg\",\"https://commimg.pddpic.com/monica/2023-05-27/83b547cc-1c12-447c-a7e1-ecb70c8c67d4.jpeg\",\"https://commimg.pddpic.com/monica/2023-05-27/ad5d1474-b28f-4490-b918-a37cc93b4ab5.jpeg.suffix.jpeg\",\"https://commimg.pddpic.com/monica/2023-05-27/44348c3c-c5c9-497a-a2d0-bdf8c103a83c.jpeg.suffix.jpeg\",\"https://commimg.pddpic.com/monica/2023-05-27/a5338e46-30ac-4964-aa3f-65185de42ff5.jpeg.suffix.jpeg\",\"https://commimg.pddpic.com/monica/2023-05-27/a949f488-ec82-480d-a336-bdd0c3287fdd.jpeg.suffix.jpeg\",\"https://commimg.pddpic.com/monica/2023-09-20/4ce648be-780c-483e-81af-59eb479a6718.jpeg.suffix.jpeg\"],\"quantity\":69999980,\"sold_quantity\":20,\"goods_status\":1,\"labels\":[],\"limit_buy\":0,\"start_buy\":0,\"min_buy\":0,\"foreign_goods_id\":19403706,\"category_name\":\"更多好货\",\"goods_activity_type\":0,\"subscribe\":false,\"source_type\":0,\"min_on_sale_group_price\":119900,\"max_on_sale_group_price\":119900,\"min_on_sale_normal_price\":119900,\"max_on_sale_normal_price\":119900,\"ignore_vip_discount\":false,\"weight\":0,\"is_zero_yuan\":false,\"cost_template_id\":\"0\",\"rank\":1,\"sold_count\":20,\"total_quantity\":70000000,\"quantity_type\":1,\"sku_list\":[{\"sku_id\":1458744174902,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[4059227455],\"spec_list\":[{\"spec_id\":4059227455,\"name\":\"紫红色\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999991,\"sold_quantity\":9,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0},{\"sku_id\":1458744174903,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[3922352309],\"spec_list\":[{\"spec_id\":3922352309,\"name\":\"红色\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999999,\"sold_quantity\":1,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0},{\"sku_id\":1458744174904,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[4012986402],\"spec_list\":[{\"spec_id\":4012986402,\"name\":\"银白色\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999998,\"sold_quantity\":2,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0},{\"sku_id\":1458744174905,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[5085245505],\"spec_list\":[{\"spec_id\":5085245505,\"name\":\"黑镍色\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999999,\"sold_quantity\":1,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0},{\"sku_id\":1458744174906,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[16300541249],\"spec_list\":[{\"spec_id\":16300541249,\"name\":\"亮铜镍色\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999999,\"sold_quantity\":1,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0},{\"sku_id\":1458744174907,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[6697386943],\"spec_list\":[{\"spec_id\":6697386943,\"name\":\"紫红镍色\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999999,\"sold_quantity\":1,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0},{\"sku_id\":1458744174908,\"thumb_url\":\"\",\"is_on_sale\":1,\"spec_id_list\":[6568035087],\"spec_list\":[{\"spec_id\":6568035087,\"name\":\"普鲁士蓝\",\"parent_name\":\"默认规格\"}],\"price\":119900,\"price_in_yuan\":\"1199.00\",\"quantity_type\":1,\"quantity\":9999995,\"sold_quantity\":5,\"total_quantity\":10000000,\"reserve_quantity\":0,\"external_sku_id\":\"\",\"foreign_sku_id\":0}],\"goods_cover\":\"https://commimg.pddpic.com/monica/2023-05-27/ce5c5ed5-ea00-40a2-be1f-0c74d08bdb40.jpeg\",\"is_virtual_goods\":false}],\"image_text_vos\":[{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-09-19/a0cc0f1d-d505-4d63-bb08-4f91d7aa3664.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-09-20/a2a4330d-8857-4563-8599-c0928d333509.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"进来的朋友第一个问题肯定是：是不是正品？\\n\\n我知道肯定有人有疑惑，想下手又不敢下手，这点我也是一样，再三跟渠道强调了，必须是正品！！\\n\\n大家买到手之后直接验证产品序列号，能在官网小程序验证就是正品！\\n\\n样品刚到手我就给大家验证了，肯定保真。\\n\\n为什么卖的便宜，懂的都懂！品牌清仓只能在私域，如果官方店铺直接降，品牌的价格体系就蹦了，对品牌伤害极大！\\n\\n这波福利太香了，缺点就是库存不多，拼手速！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-09-19/8eac7438-3e2f-4421-bd13-b0b8a2e9f3a5.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-09-19/108a0a3e-91dd-4a72-9420-ef9f8c292a8f.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-09-19/74c8fb4e-9d23-4537-a10f-db74f5d38eb7.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"要说吹风机哪个品牌最强，相信大部分人都会说是戴森吧？\\n\\n作为吹风机领域的“苹果”，戴森在消费者心理一直都是黑科技的代言词，特别是他家举世闻名的吹风机！！\\n\\n不仅可以快速干发，防止过高温度损伤秀发，还配有5款功能强大的风嘴，可以打造多款造型！\\n\\n采用数码马达&气流倍增技术，使得吹风机喷射3倍强劲气流，4分钟就能快速吹干！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/ca27d782-f871-490c-afd6-4c5045a09cdb.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/f361a26a-97e0-4939-b2db-282b4bc2139c.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"采用智能温控，同时又保证气流温度，通过柔和的大风量呵护头发与头皮，毛糙打结都是不存在的！\\n\\n自「戴森吹风机」一推出，许多博主就纷纷充当自来水军，到处安利。\\n\\n戴森吹风机得到过的评价有 图片\\n吹风机有两种，戴森和其他。\\n太好用了，会像对待初恋一样对待「戴森吹风机」。\\n吹完头发巨顺滑，还很自然。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/ff732746-1816-4691-abe8-cab658920a35.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/6235e66c-ad3c-48a6-a29f-3ca042fa4115.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/291013f1-ae19-41f9-98a6-10f5c9750843.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"实物是非常高级的磨砂质感，颜值真的非常高。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/40d98ccc-d512-4b89-9e5a-b0c70e856b29.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"七款颜色可选：紫红色、红色、银白色、黑镍色、亮铜镍色、紫红镍色、普鲁士蓝！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/c54b8b18-6ae3-47e4-9157-6785269fd236.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"好用是真的好用，但如果想买一只，真的要吃土，Dyson戴森官方旗舰店一只吹风机要3199元！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/71399052-a8cb-4068-a589-086e649c4869.png\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"今天在主播这只要1299元就能入手！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"戴森的创始人詹姆斯·戴森（James Dyson），出生于1947年。\\n\\n已经70多岁的戴森，是个不折不扣的黑科技发明家，被英国媒体誉为“英国设计之王”，有564项专利发明。\\n\\n戴森这家科技公司，由创始人詹姆斯戴森创立于1993年，在新加坡和英国皆设有研发和测试中心。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/5bf891b2-2094-4ba8-a625-2ad07f9a8f1c.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"发明的真空吸尘器、无扇叶空气净化风扇，俘获了一大票粉丝的芳心。\\n\\n这次耗时5年的研发出来的戴森吹风机，简直颠覆了大家对吹风机的认知！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"戴森吹风机配有V9数码马达，能够110,000转/分钟！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/2339e1c4-284b-46f8-b6ee-9ccec17e7190.png\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"它能产生高速、高压的强劲风力，快速吹走头发表面的水分，同时防止风温过高，实现温和吹干。\\n\\n戴森专利气流倍增技术，使吹风机喷射3倍强劲气流，强劲气流直达发根，快速吹走头发表面水分，干发无需过高温度。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/4bce5254-4561-4b30-bbe8-fc303f23b392.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"吹出丰盈靓丽秀发，让秀发保持水润柔亮飘逸，让美丽从头开始。\\n\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/9d2f0b4e-6eea-4515-b378-1e4444b667fd.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/7b25bfd3-f093-4b8f-bfef-4883bf46c22a.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"在戴森V9数码马达的支持下，高速气流将纳米大小的负离子从发根输送至发梢。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/0d227e95-084d-4045-a0d2-b9962ebebd17.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"负离子可以减少头发中的静电，帮助打造更顺滑的造型。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/90a445d7-6574-4b93-b1bd-938abf532fe5.png\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"还配有智能温控技术，每秒40余次精准监测，监测出风口温度，并将数据传达给处理器，确保风温不会超过150°C！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"减少头发毛躁，使发丝更加顺滑、更有光泽！\\n\\n\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/d9148236-8dc7-495d-a2f8-4ecf94f29471.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"除了吹风机本身，这款戴森吹风机还配备了5个不用的风嘴，方便我们在家都可以做出想要的造型。\\n\\n顺滑风嘴、造型风嘴、扩散风嘴、柔和风嘴、全新防飞翘风嘴。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/f3bf6b2e-420c-43a5-a39d-01da6f5489d8.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"顺滑风嘴：吹出顺滑直发\\n\\n搭配顺滑风嘴使用，能形成平滑、可控的气流，顺着发根到发尾的方向吹干，能减少头发毛躁，打造顺滑直发。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/1a40e657-2d4f-404b-9285-a8dd42f889fa.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"造型风嘴：做造型更顺利\\n\\n造型风嘴能让戴森吹风机的气流更宽更集中，搭配卷梳，帮你精准完成局部造型。\\n\\n更集中的气流，有助于避免在造型时吹乱其他头发，无论是帮助定型刘海，还是打造内扣发尾，都不在话下。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/806e94b6-80ba-44b6-9fd6-6622e932acf2.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"扩散风嘴：维持头发卷度\\n\\n在头发半干时，顺着卷发纹理，将发尾盘进扩散风嘴直至吹干，打造魅力卷发，营造蓬松度！\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/b1c86582-4429-49f6-9e37-3368ecbde062.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"柔和风嘴：打造蓬松造型\\n\\n风力更大更温和，吹出蓬松立体发型。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/7cc27e11-a415-41a3-870d-b302d7715ced.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"防飞翘风嘴：减少飞翘\\n\\n戴森在风嘴设计上更进一步，利用了神奇的康达效应，气流不仅帮你把较长的发丝自动吸引至表面，还能隐藏飞翘的头发。\\n\\n\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/e8d8bfc1-b742-4d87-9a5b-bd5fe25dadac.gif\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"握感舒适，专为手持平衡设计，单手握持轻巧方便。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/b668b49b-006f-484d-9de0-30bbcd7da4f2.jpeg\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"操作简单，滑动开关，3档精确风速设置，4档精确温度设置~\\n\\n内置滤网防止吸入灰尘和头发。\\n\\n\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":1,\"content\":\"https://commimg.pddpic.com/monica/2023-05-27/557b85f1-d11b-4c59-9bb1-95425b4855de.png\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0},{\"type\":3,\"content\":\"【品名】：【资质齐全】Dyson戴森吹风机HD08护发 礼盒款\\n【规格】：紫红色，紫红镍色，黑色，红色，亮铜镍色，普鲁士蓝，银白色\\n【产品原产国】：美国\\n【版本】：国行\\n【包装方式】：礼盒装\\n【快递】：顺丰\\n【发货地】：深圳\\n【运费模板】：全国包邮\\n【发货时效】：48小时\\n【售后政策】：支持七天无理由退换（不影响二次销售的基础上）\\n【质保】非人为因素，一年内免费质保，寄回维修，商家承担来回运费。\",\"cover\":\"\",\"video_md5\":\"\",\"audit_status\":0}],\"title\":\"\uD83D\uDC4F资质齐全！保证正品！Dyson戴森吹风机HD08护发 礼盒款\uD83C\uDF81立降2000元！！只要1199元\uD83D\uDCB5\uD83D\uDCB5巨划算‼️库存不多，今天下单还送同品牌气垫按摩发梳一个，送完即止‼️\\n\\n✅戴森集黑科技于一身的品牌\\n✅V9数码马达，强劲风力，快速吹干+\\n✅七款颜色可选，性价比真的好高\"}}\n";
+        System.err.println(JSON.toJSONString(ss1));
+    }
+
+
+
+
+
+
+
+
+
+    @org.junit.Test
+    public void hotfixStringV1(){
+        String dateStr ="20230914";
+        String pattern ="yyyyMMdd" ;
+        //获取拉取时间
+        System.err.println(parseDateString(dateStr,pattern));
+
+
+//        //获取之前的时间
+//        String DATE_PATTERN = "yyyy-MM-dd";
 //
-//         System.err.println(JSON.toJSON(tradeOrderEvent));
+//        String format = format(new Date(), DATE_PATTERN);
+//        System.err.println(format);
+//
+//        System.err.println(parseDateString(format,DATE_PATTERN));
+
 
     }
+
+
+
+
+
+
+
+    public static String format(Date date, String pattern) {
+        if (date == null) {
+            return "";
+        }
+        FastDateFormat fdf = FastDateFormat.getInstance(pattern);
+        return fdf.format(date);
+    }
+
+
+
+
+    public static Date parseDateString(String dateStr, String pattern) {
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Date date = null;
+        if (StringUtils.isNotBlank(dateStr)) {
+            try {
+                date = format.parse(dateStr);
+            } catch (ParseException e) {
+            }
+        }
+        return date;
+    }
+
+
 
 
     /**

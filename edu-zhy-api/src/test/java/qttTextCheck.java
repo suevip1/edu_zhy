@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class qttTextCheck {
 
     //风控筛选list
-    private static List<String> stringList = Arrays.asList("内容","商品名称","标题","敏感词");
+    private static List<String> stringList = Arrays.asList("内容","商品名称","标题","敏感","描述","笔记");
 
 
     //图片筛选list
@@ -53,7 +53,86 @@ public class qttTextCheck {
         System.err.println("全部的订单size"+argList.size()+"总量的订单编号"+argList);
     }
 
+    //效验spu商品规格 不符合的先删除了
+    @Test
+    public void checkQttSpu(){
+        List<String> nameList = new ArrayList<>();
+        List<Boolean> booleanList = new ArrayList<>();
+        JSONArray array = new JSONArray();
+        try {
 
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\德利丰_岩板·家居-132901246\\德利丰_岩板·家居-132901246.json";
+
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\德利丰_岩板·家居-132901246\\德利丰_岩板·家居-132901246 - 副本 - 副本 - 副本.json";
+
+            File file1 = new File(sourceFile);
+
+            FileInputStream fis = new FileInputStream(file1);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+            String line = null;
+
+            FileWriter writer = new FileWriter(fileResult, true);
+
+            int i = 0;
+
+            while ((line = br.readLine()) != null) {
+                i++;
+                JSONObject object = JSON.parseObject(line);
+                JSONObject resultAll = object.getJSONObject("result");
+//                String collectionActivityNoAll = resultAll.getString("collection_activity_no");
+
+                JSONArray jsonArray = resultAll.getJSONArray("goods_info_with_sku_vo_list");
+
+                for (int k = 0; k < jsonArray.size(); k++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(k);
+                    String goods_name = jsonObject.getString("goods_name");
+
+                    JSONArray sku_list = jsonObject.getJSONArray("sku_list");
+
+                    for (int v = 0; v < sku_list.size(); v++) {
+                        JSONObject jsonArrayJSONObject = sku_list.getJSONObject(v);
+                        JSONArray spec_id_list = jsonArrayJSONObject.getJSONArray("spec_id_list");
+
+                        JSONArray spec_list = jsonArrayJSONObject.getJSONArray("spec_list");
+
+                        if (spec_id_list.size() > 3 || spec_list.size() > 3){
+                            booleanList.add(true);
+                        }else {
+                            booleanList.add(false);
+                        }
+
+                    }
+
+
+                    if (booleanList.contains(true)){
+                        nameList.add(goods_name);
+                        continue;
+                    }
+
+                    array.add(jsonObject);
+                }
+
+                resultAll.put("goods_info_with_sku_vo_list",array);
+
+                object.put("result",resultAll);
+
+
+                writer.write(object.toString());
+                writer.write("\n");
+
+            }
+            System.out.println("一共删除的个数:"+nameList.size()+"删除的商品名称:"+ nameList);
+            br.close();
+            writer.close();
+
+        }catch (Exception e){
+            log.error("有问题有问题 e:{}",e);
+        }
+
+
+    }
 
     //效验筛选文档数据对比
     //单列
@@ -79,6 +158,53 @@ public class qttTextCheck {
         System.err.println("长度"+collect.size()+"\\"+"没有执行的"+ JSON.toJSONString(collect));
     }
 
+    //只为了获取名称
+    @Test
+    public void checkQttLogErrorV3(){
+
+        try {
+            //帅选名称的标识
+            List<String> list = Arrays.asList("0kcfrn0g5-NrlnKfNdduXwQKGXRzQntg");
+            //不是是敏感词的名称
+            List<String> titleList = new ArrayList<>();
+            //全量文档
+//        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
+            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\涛哥跑工厂-132528327\\涛哥跑工厂-132528327-20231013.json";
+            Integer i = 0;
+
+//            List<String> lines1 = readLinesFromFile(errorFilePath);
+            List<String> lines2 = readLinesFromFile(logAllFilePath);
+
+            for (String lineAll : lines2) {
+                JSONObject object = JSON.parseObject(lineAll);
+                JSONObject resultAll = object.getJSONObject("result");
+                String collectionActivityNoAll = resultAll.getString("collection_activity_no");
+                String title = resultAll.getString("title");
+
+                if (list.contains(collectionActivityNoAll)){
+                    titleList.add(title+";");
+                }
+
+            }
+
+            System.out.println(i);
+
+            System.err.println("不是敏感词的外部业务标识:"+JSON.toJSONString(titleList)+":不是敏感词的外部业务标识的长度:"+titleList.size());
+
+
+
+
+        }
+//        catch (IOException e){
+//            log.error("失败了呜呜呜 IOException:{}",e);
+//        }
+    catch (Exception e){
+            log.error("失败了呜呜呜 Exception:{}",e);
+        }
+    }
+
+
+
 
     //读取错误文档与全量文档数据  进行筛选
     //只处理敏感词（不是的错误日志打印出来就好）
@@ -92,8 +218,10 @@ public class qttTextCheck {
         //错误文档
         String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logerror.txt";
         //全量文档
-        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-        //写入结果
+//        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
+        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\涛哥跑工厂-132528327\\涛哥跑工厂-132528327-20231013.json";
+
+            //写入结果
         String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
 
 
@@ -128,10 +256,11 @@ public class qttTextCheck {
                 JSONObject object = JSON.parseObject(lineAll);
                 JSONObject resultAll = object.getJSONObject("result");
                 String collectionActivityNoAll = resultAll.getString("collection_activity_no");
-                //条件相同的写入进去
+
+
                 if (Objects.equals(collectionActivityNo,collectionActivityNoAll)){
 
-                    String streamV2 = subBeforePushStreamV2(subBeforeError);
+                    String streamV2 =  subBeforePushStreamV2(subBeforeError);
 
                     object.put("error",streamV2);
 
@@ -144,10 +273,7 @@ public class qttTextCheck {
 
             System.out.println(i);
 
-            System.err.println("不是敏感词的外部业务标识:"+noSensitiveWordsList);
-
-            System.err.println("不是敏感词的外部业务标识的长度:"+noSensitiveWordsList.size());
-
+            System.err.println("不是敏感词的外部业务标识:"+JSON.toJSONString(noSensitiveWordsList)+":不是敏感词的外部业务标识的长度:"+noSensitiveWordsList.size());
 
             writer.close();
 
@@ -293,13 +419,14 @@ public class qttTextCheck {
     public void updateGoodId(){
 
         try {
-            String kdtId ="129727684";
+            //取店铺后两位
+            String kdtId ="83";
 
             String line;
             int i = 0;
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本 - 副本.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\极致拉人熊猫+131523583\\（好友已满）极致拉人能猫-131523583.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\极致拉人熊猫+131523583\\（好友已满）极致拉人能猫-131523583 - 副本.json";
 
             File file1 = new File(sourceFile);
 
@@ -353,7 +480,7 @@ public class qttTextCheck {
     }
 
 
-    //效验商品数是否超过100;超过一百的不处理
+    //效验商品数是否超过200;超过一百的不处理
     //这里还需要加入写入功能生成新的文档
     @Test
     public void checkGoodsInfoWithSkuVoListSize(){
@@ -363,9 +490,9 @@ public class qttTextCheck {
             int i = 0;
             String line ;
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\番薯哥供应链供货+136579840\\番薯哥供应链供货-详情.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\涛哥跑工厂-132528327\\涛哥跑工厂-132528327.json";
 
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\番薯哥供应链供货+136579840\\番薯哥供应链供货空文档.json";
+//            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\番薯哥供应链供货+136579840\\番薯哥供应链供货空文档.json";
 
             File file1 = new File(sourceFile);
 
@@ -376,13 +503,14 @@ public class qttTextCheck {
 //            FileWriter writer = new FileWriter(fileResult, true);
 
             while ((line = br.readLine()) != null) {
-                System.out.println(i++);
+                i++;
+//                System.out.println(i++);
                 JSONObject jsonObject = JSON.parseObject(line);
                 JSONObject result = jsonObject.getJSONObject("result");
                 String collectionActivityNo = result.getString("collection_activity_no");
                 JSONArray goodsInfoWithSkuVoList = result.getJSONArray("goods_info_with_sku_vo_list");
 
-                if (goodsInfoWithSkuVoList.size() >= 100){
+                if (goodsInfoWithSkuVoList.size() >= 200){
                    list.add(collectionActivityNo);
 
                 }
@@ -395,7 +523,7 @@ public class qttTextCheck {
 
             }
 
-            System.err.println("长度是"+list.size()+"\\"+"超过100的商品"+JSON.toJSONString(list)+"\\"+"一共循环"+i+"次");
+            System.err.println("长度是"+list.size()+"\\"+"超过200的商品"+JSON.toJSONString(list)+"\\"+"一共循环"+i+"次");
             br.close();
             //小于100的生成文档  看情况开放
 //            writer.close();
@@ -416,8 +544,8 @@ public class qttTextCheck {
 
         try {
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销.json";
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\选甄栈更换名称亚农生态农业直销+129727684\\亚农生态农业直销 - 副本.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\熊熊严选-131513320\\熊熊严选-131513320.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\熊熊严选-131513320\\熊熊严选-131513320-v1.json";
 
             File file1 = new File(sourceFile);
 

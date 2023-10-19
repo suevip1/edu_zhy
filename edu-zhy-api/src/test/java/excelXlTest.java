@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class excelXlTest {
 
     //导入文件的路径
-    private static final String PATH = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\跨团订单14_05_35.xlsx";
+    private static final String PATH = "C:\\Users\\Admin\\Downloads\\20231010190048a2291c65.xls";
 
     private static final String COPY_PATH = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\有赞小红书类目映射.xls";
 
@@ -34,11 +34,12 @@ public class excelXlTest {
 
 
     //需要提前新建目录  写入的文件名称
-    private static final String FILE_NAME = "C:\\Users\\Admin\\Desktop\\excel\\10.xlsx";
+    private static final String FILE_NAME = "C:\\Users\\Admin\\Desktop\\excel\\9-20导出.xlsx";
 
 
     //每行的行数
-    private static  final Integer LINE_NUMBER =14;
+//    private static  final Integer LINE_NUMBER =14;
+    private static  final Integer LINE_NUMBER =1;
 
     private static List<String> pashList = Lists.newArrayList(PATH, PATHV1, PATHV2, PATHV2);
 
@@ -240,6 +241,8 @@ public class excelXlTest {
 
             List<ExcelKttOrderDTO> excelKttOrderDTOS = readExcelXlsx();
 
+//            List<String> collect = excelKttOrderDTOS.stream().filter(Objects::nonNull).map(ExcelKttOrderDTO::getPackageNumber).collect(Collectors.toList());
+//            System.err.println(JSON.toJSONString(collect));
             List<yzScrmExcelDTO> yzScrmExcelDTOS = data2(excelKttOrderDTOS);
 
             // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
@@ -367,15 +370,15 @@ public class excelXlTest {
 //        System.err.println("长度:"+list.size()+"数据data:"+ JSON.toJSON(list));
         ExcelKttOrderDTO excelKttOrderDTO = new ExcelKttOrderDTO();
         excelKttOrderDTO.setPackageNumber(list.get(0));
-        excelKttOrderDTO.setPayOrderName(list.get(1));
-        excelKttOrderDTO.setPayDate(list.get(3));
-        excelKttOrderDTO.setProduct(list.get(5));
-        excelKttOrderDTO.setPayPrice(list.get(6));
-        excelKttOrderDTO.setRefundPrice(list.get(7));
-        excelKttOrderDTO.setStatus(list.get(8));
-        excelKttOrderDTO.setConsignee(list.get(10));
-        excelKttOrderDTO.setPhone(list.get(11));
-        excelKttOrderDTO.setDetailedAddress(list.get(12));
+//        excelKttOrderDTO.setPayOrderName(list.get(1));
+//        excelKttOrderDTO.setPayDate(list.get(3));
+//        excelKttOrderDTO.setProduct(list.get(5));
+//        excelKttOrderDTO.setPayPrice(list.get(6));
+//        excelKttOrderDTO.setRefundPrice(list.get(7));
+//        excelKttOrderDTO.setStatus(list.get(8));
+//        excelKttOrderDTO.setConsignee(list.get(10));
+//        excelKttOrderDTO.setPhone(list.get(11));
+//        excelKttOrderDTO.setDetailedAddress(list.get(12));
 
         return excelKttOrderDTO;
     }

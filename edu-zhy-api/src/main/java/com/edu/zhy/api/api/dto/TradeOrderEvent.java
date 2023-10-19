@@ -2,12 +2,14 @@ package com.edu.zhy.api.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class TradeOrderEvent implements Serializable {
     /**
      * 订单消息类型 see
@@ -48,4 +50,12 @@ public class TradeOrderEvent implements Serializable {
      * 唯一标识
      */
     private String uniqueKey;
+
+
+
+    //////
+
+    private Integer min;
+
+    private Integer max;
 }
