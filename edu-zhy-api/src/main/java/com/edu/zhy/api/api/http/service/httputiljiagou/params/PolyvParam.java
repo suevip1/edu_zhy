@@ -10,4 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class PolyvParam extends AbstractHttpParam {
 
+//    //参数给map
+//    Map<String, String> paramMap = new HashMap<>();
+
 }

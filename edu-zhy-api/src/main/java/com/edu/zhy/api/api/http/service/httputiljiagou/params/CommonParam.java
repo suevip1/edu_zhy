@@ -10,5 +10,8 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class CommonParam extends AbstractHttpParam {
 
+//    //参数给map
+//    Map<String, String> paramMap = new HashMap<>();
+
 
 }

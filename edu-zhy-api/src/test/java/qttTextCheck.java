@@ -164,12 +164,12 @@ public class qttTextCheck {
 
         try {
             //帅选名称的标识
-            List<String> list = Arrays.asList("0kcfrn0g5-NrlnKfNdduXwQKGXRzQntg");
+            List<String> list = Arrays.asList("0ic8u8qd6-G-q0kiFY_btKtSSF_grGog","0dn0g7vvt-G-q0kiFY_btKtSSF_grGog","0a184104l-G-q0kiFY_btKtSSF_grGog","0j37uot5v-G-q0kiFY_btKtSSF_grGog","0j21tmseo-G-q0kiFY_btKtSSF_grGog","0in5nqerg-G-q0kiFY_btKtSSF_grGog","0ii000ced-G-q0kiFY_btKtSSF_grGog","0iermg6u8-G-q0kiFY_btKtSSF_grGog","0idac1373-G-q0kiFY_btKtSSF_grGog","0gnfo20ml-G-q0kiFY_btKtSSF_grGog","0dflbuuct-G-q0kiFY_btKtSSF_grGog","0bcab4c1r-G-q0kiFY_btKtSSF_grGog","099a2goqm-G-q0kiFY_btKtSSF_grGog");
             //不是是敏感词的名称
             List<String> titleList = new ArrayList<>();
             //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\涛哥跑工厂-132528327\\涛哥跑工厂-132528327-20231013.json";
+            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\HC_86-145285201\\HC_86-145285201.json";
             Integer i = 0;
 
 //            List<String> lines1 = readLinesFromFile(errorFilePath);
@@ -182,12 +182,11 @@ public class qttTextCheck {
                 String title = resultAll.getString("title");
 
                 if (list.contains(collectionActivityNoAll)){
-                    titleList.add(title+";");
+                    titleList.add(title+"+");
                 }
 
             }
 
-            System.out.println(i);
 
             System.err.println("不是敏感词的外部业务标识:"+JSON.toJSONString(titleList)+":不是敏感词的外部业务标识的长度:"+titleList.size());
 
@@ -219,7 +218,7 @@ public class qttTextCheck {
         String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logerror.txt";
         //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\涛哥跑工厂-132528327\\涛哥跑工厂-132528327-20231013.json";
+        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\HC_86-145285201\\HC_86-145285201.json";
 
             //写入结果
         String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
