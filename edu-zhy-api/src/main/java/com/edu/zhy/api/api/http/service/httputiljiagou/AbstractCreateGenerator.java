@@ -15,5 +15,9 @@ public abstract class AbstractCreateGenerator<K extends AbstractHttpRequest,V ex
     }
 
 
+    @Override
+    public Integer generatorType() {
+        return null;
+    }
 
 }

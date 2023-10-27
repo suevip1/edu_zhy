@@ -1,12 +1,16 @@
 package com.edu.zhy.api.api.http.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class AbstractHttpRequest implements Serializable {
     private static final long serialVersionUID = 1107522469901752984L;
 
@@ -23,7 +27,8 @@ public abstract class AbstractHttpRequest implements Serializable {
 
     /**
      * *GET请求下的网址格式
-     * *get请求需要的
+     * *get请求需要的（这个暂时可以先不用;目前没想到验证方式）
+     * *目前格式:/参数/参数?   (这样拼接)
      */
     private String exampleUrl;
 

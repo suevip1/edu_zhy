@@ -7,10 +7,12 @@ import com.edu.zhy.api.api.http.dto.AbstractHttpResponse;
 import com.edu.zhy.api.api.http.enums.CookieType;
 import com.edu.zhy.api.api.http.enums.UserEquipmentType;
 import com.edu.zhy.api.api.http.okhttp.OKHttpUtils;
+import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -18,9 +20,18 @@ import java.util.*;
  * *这点抽象出来
  */
 @Slf4j
+@Component
 public abstract class
 AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T extends AbstractHttpResponse>
+        extends AbstractGeneratorApplication
         implements HttpUtilService<K , V , T > {
+
+
+
+    @Override
+    public Integer getHttpType() {
+        throw new BusinessException(-100);
+    }
 
 
     /**
@@ -56,6 +67,17 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         }
 
     }
+
+    /**
+     * *根据类型获取bean
+     * @param type
+     * @return
+     */
+    public static HttpCreateGenerator getGeneratorTypeBean(Integer type){
+        return generatorHashMap.get(type);
+    }
+
+
 
 
 
@@ -108,7 +130,10 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         SendHttpUtilRequest request = new SendHttpUtilRequest();
         if (Objects.isNull(sendHttpContext)
                 || Objects.isNull(sendHttpContext.getAbstractHttpRequest())
-        || Objects.isNull(sendHttpContext.getAbstractHttpParam())) return null;
+        || Objects.isNull(sendHttpContext.getAbstractHttpParam())) {
+            log.info("buildGetOrPost 失败参数有为空的 sendHttpContext:{}",sendHttpContext);
+            return request;
+        }
 
         if (sendHttpContext.getAbstractHttpRequest().getIsRequest()){
             //这里get请求转换

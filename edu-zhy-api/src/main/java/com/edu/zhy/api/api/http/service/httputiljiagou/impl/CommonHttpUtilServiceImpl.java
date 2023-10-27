@@ -1,13 +1,17 @@
 package com.edu.zhy.api.api.http.service.httputiljiagou.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.edu.zhy.api.api.http.enums.RequestType;
 import com.edu.zhy.api.api.http.service.httputiljiagou.AbstractHttpService;
 import com.edu.zhy.api.api.http.service.httputiljiagou.Context.CommonContext;
+import com.edu.zhy.api.api.http.service.httputiljiagou.Generator.CommonGenerator;
+import com.edu.zhy.api.api.http.service.httputiljiagou.HttpCreateGenerator;
+import com.edu.zhy.api.api.http.service.httputiljiagou.SendHttpContext;
 import com.edu.zhy.api.api.http.service.httputiljiagou.back.CommonResponse;
+import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
 import com.edu.zhy.api.api.http.service.httputiljiagou.params.CommonParam;
 import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
@@ -16,8 +20,10 @@ import java.util.Objects;
  */
 
 @Slf4j
-@Service
-public class CommonHttpUtilServiceImpl extends AbstractHttpService<CommonContext, CommonParam, CommonResponse> {
+@Service(protocol = {"dubbo"}, registry = {"haunt"})
+public class CommonHttpUtilServiceImpl extends AbstractHttpService<CommonContext, CommonParam, CommonResponse>
+//        implements ApplicationContextAware
+        {
 
 
     @Override
@@ -40,7 +46,29 @@ public class CommonHttpUtilServiceImpl extends AbstractHttpService<CommonContext
     @Override
     public void Execute(CommonContext commonContext, CommonParam commonParam) {
 
-//        List<Object> list = new ArrayList<>();
+//        HttpCreateGenerator commonGenerator = getGeneratorTypeBean(GeneratorType.COMMON_TYPE_GENERATOR.getType());
+
+        HttpCreateGenerator commonGenerator = InitApplicationContextUtil.getInstance(CommonGenerator.class);
+
+        SendHttpContext context = commonGenerator.generator(commonContext, commonParam);
+
+        sendGetOrPost(buildGetOrPost(context));
+
+    }
+
+    @Override
+    public CommonResponse backExecute(CommonContext commonContext, CommonParam commonParam) {
+        return null;
+    }
+
+    @Override
+    public void afterExecute(CommonContext commonContext, CommonParam commonParam) {
+
+    }
+
+
+
+            //        List<Object> list = new ArrayList<>();
 //
 //        Map<String, String> paramMap = commonParam.getParamMap();
 //
@@ -62,19 +90,5 @@ public class CommonHttpUtilServiceImpl extends AbstractHttpService<CommonContext
 //        bodyMap.put("sc", commonContext.getSc());
 //        bodyMap.put("timeout", commonContext.getTimeout());
 //        bodyMap.put("retries", commonContext.getRetries());
-
-
-    }
-
-    @Override
-    public CommonResponse backExecute(CommonContext commonContext, CommonParam commonParam) {
-        return null;
-    }
-
-    @Override
-    public void afterExecute(CommonContext commonContext, CommonParam commonParam) {
-
-    }
-
 
 }

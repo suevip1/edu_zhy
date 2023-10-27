@@ -1,12 +1,16 @@
 package com.edu.zhy.api.api.http.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class AbstractHttpParam implements Serializable {
     private static final long serialVersionUID = 894225858174287776L;
 

@@ -1,5 +1,8 @@
 import com.alibaba.fastjson.JSON;
 import com.edu.zhy.api.api.dto.OfflineOrderHandleContext;
+import com.edu.zhy.api.api.http.service.httputiljiagou.HttpUtilService;
+import com.edu.zhy.api.api.http.service.httputiljiagou.impl.CommonHttpUtilServiceImpl;
+import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.commons.lang3.StringUtils;
@@ -324,10 +327,10 @@ public class Test {
 
     @org.junit.Test
     public void hotfixStringV1(){
-        String dateStr ="20230914";
-        String pattern ="yyyyMMdd" ;
-        //获取拉取时间
-        System.err.println(parseDateString(dateStr,pattern));
+//        String dateStr ="20230914";
+//        String pattern ="yyyyMMdd" ;
+//        //获取拉取时间
+//        System.err.println(parseDateString(dateStr,pattern));
 
 
 //        //获取之前的时间
@@ -337,6 +340,19 @@ public class Test {
 //        System.err.println(format);
 //
 //        System.err.println(parseDateString(format,DATE_PATTERN));
+//        Date synt = new Date() ;
+//
+//        System.err.println(synt.getTime());
+
+
+        HttpUtilService instance = InitApplicationContextUtil
+                .getInstance(CommonHttpUtilServiceImpl.class);
+
+        System.err.println(instance);
+
+        InitApplicationContextUtil.closeClient();
+
+
 
 
     }

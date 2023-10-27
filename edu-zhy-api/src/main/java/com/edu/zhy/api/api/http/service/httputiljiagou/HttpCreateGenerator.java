@@ -11,6 +11,12 @@ public interface HttpCreateGenerator<K,V> {
     SendHttpContext generator(K k, V v);
 
 
+    /**
+     *类型注入
+     * */
+    Integer generatorType();
+
+
 
 
 }

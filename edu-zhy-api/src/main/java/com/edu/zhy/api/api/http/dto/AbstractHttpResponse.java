@@ -1,10 +1,14 @@
 package com.edu.zhy.api.api.http.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class AbstractHttpResponse<T> implements Serializable {
     private static final long serialVersionUID = -3556058019030712456L;
 
