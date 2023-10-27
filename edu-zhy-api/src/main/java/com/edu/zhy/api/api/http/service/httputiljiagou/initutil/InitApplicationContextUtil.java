@@ -1,20 +1,21 @@
 package com.edu.zhy.api.api.http.service.httputiljiagou.initutil;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * *通过  AnnotationConfigApplicationContext 快速得到一个bean
+ * *可以用
  */
-public class InitApplicationContextUtil
-//        implements ApplicationContextAware
-{
+public class InitApplicationContextUtil {
 
     private static volatile AnnotationConfigApplicationContext applicationContext;
 
-    private static ApplicationContext context;
-
-
+    /**
+     * *初始化对外接口
+     * @param tClass
+     * @param <T>
+     * @return
+     */
     public static <T> T getInstance(Class<T> tClass){
         return initClient(tClass);
     }
@@ -51,6 +52,7 @@ public class InitApplicationContextUtil
 //
 
     /**
+     * *对外关闭接口
      * *关闭资源 进行销毁
      */
     public static void closeClient(){
