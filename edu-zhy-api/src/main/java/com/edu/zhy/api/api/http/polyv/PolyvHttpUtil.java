@@ -18,20 +18,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
 
 @Slf4j
-@Component
-public class PolyvHttpUtil implements ApplicationContextAware {
+//@Component
+public class PolyvHttpUtil
+//        implements ApplicationContextAware
+{
 
-    @Value("${owl.live.outter.proxy}")
+//    @Value("${owl.live.outter.proxy}")
     public String proxy;
 
     private PolyvHttpUtil polyvHttpUtil;
@@ -300,16 +297,16 @@ public class PolyvHttpUtil implements ApplicationContextAware {
     }
 
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Map<String, PolyvHttpUtil> beansOfType = applicationContext.getBeansOfType(PolyvHttpUtil.class);
-
-        for (Map.Entry<String , PolyvHttpUtil> stringPolyvHttpUtilEntry : beansOfType.entrySet()){
-
-            polyvHttpUtil = stringPolyvHttpUtilEntry.getValue();
-
-        }
-    }
+//    @Override
+//    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+//        Map<String, PolyvHttpUtil> beansOfType = applicationContext.getBeansOfType(PolyvHttpUtil.class);
+//
+//        for (Map.Entry<String , PolyvHttpUtil> stringPolyvHttpUtilEntry : beansOfType.entrySet()){
+//
+//            polyvHttpUtil = stringPolyvHttpUtilEntry.getValue();
+//
+//        }
+//    }
 
 
 

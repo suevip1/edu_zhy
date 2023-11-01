@@ -1,9 +1,7 @@
 import com.alibaba.fastjson.JSON;
 import com.edu.zhy.api.api.dto.OfflineOrderHandleContext;
-import com.edu.zhy.api.api.http.enums.RequestType;
 import com.edu.zhy.api.api.http.service.httputiljiagou.HttpUtilService;
 import com.edu.zhy.api.api.http.service.httputiljiagou.impl.CommonHttpUtilServiceImpl;
-import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.ApplicationContextHelper;
 import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -367,11 +365,17 @@ public class Test {
 
     @org.junit.Test
     public void httpv2(){
+//
+//        HttpUtilService dispatch = ApplicationContextHelper
+//                .dispatch(HttpUtilService.class, RequestType.COMMON_TYPE.getName(), "getHttpType");
+//
+//        System.err.println(dispatch);
 
-        HttpUtilService dispatch = ApplicationContextHelper
-                .dispatch(HttpUtilService.class, RequestType.COMMON_TYPE.getName(), "getHttpType");
 
-        System.err.println(dispatch);
+        CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
+
+        System.err.println(instance);
+//        instance.executeCommon();
 
     }
 

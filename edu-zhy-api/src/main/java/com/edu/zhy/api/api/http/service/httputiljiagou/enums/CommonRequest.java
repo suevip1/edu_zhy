@@ -12,12 +12,12 @@ import java.util.Objects;
 @NoArgsConstructor
 public enum CommonRequest {
 
-    UEL(1,"","URL:请求的接口地址"),
+    UEL(1,"https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json","URL:请求的接口地址"),
     EXAMPLE_URL(2,"","exampleUrl:格式请求地址"),
     CONTENT_TYPE(3,"application/json","contentType:格式: application/json"),
     COOKIE(4,"","cookie:cookie信息 电脑抓"),
     USER_AGENT(5,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36","userAgent:电脑信息"),
-    APP(6,"edu_zhy","app:内部访问应用  owl-live"),
+    APP(6,"ebiz-owl","app:内部访问应用  owl-live"),
     ENV(7,"","env:内部访问应用环境 pre"),
     SERVICE(8,"","service : 接口路径:com.youzan.owl.live.api.live.video.EduPolyvRemakesPlayBackFacade"),
     METHOD(9,"","method:请求得方法"),

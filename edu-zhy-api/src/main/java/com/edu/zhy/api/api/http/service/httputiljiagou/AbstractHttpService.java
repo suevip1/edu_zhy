@@ -4,15 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.edu.zhy.api.api.http.dto.AbstractHttpParam;
 import com.edu.zhy.api.api.http.dto.AbstractHttpRequest;
 import com.edu.zhy.api.api.http.dto.AbstractHttpResponse;
-import com.edu.zhy.api.api.http.enums.CookieType;
-import com.edu.zhy.api.api.http.enums.UserEquipmentType;
 import com.edu.zhy.api.api.http.okhttp.OKHttpUtils;
 import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -20,7 +17,7 @@ import java.util.*;
  * *这点抽象出来
  */
 @Slf4j
-@Component
+//@Component
 public abstract class
 AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T extends AbstractHttpResponse>
         extends AbstractGeneratorApplication
@@ -61,11 +58,19 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         }
 
         Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
-        if (200 != MapUtils.getInteger(dataMap, "code")) {
+        if (dataMap.isEmpty()){
+            System.out.println(result);
+            throw new IllegalStateException("请求失败，返回数据为空");
+        }
+
+        if (
+                "ok" != MapUtils.getString(dataMap,"msg") &&
+                        200 != MapUtils.getIntValue(dataMap, "code")) {
             System.out.println(result);
             throw new IllegalStateException("请求失败，返回code!=200");
         }
 
+        System.out.println("请求成功的数据:{"+result+"}");
     }
 
     /**
@@ -224,8 +229,8 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Content-Type", abstractHttpRequest.getContentType());
-        headerMap.put("Cookie", CookieType.COOKIE_TYPE_V1.getCookies());
-        headerMap.put("User-Agent", UserEquipmentType.USER_EQUIPMENT_TYPE_V1.getUserMessage());
+        headerMap.put("Cookie", abstractHttpRequest.getCookie());
+        headerMap.put("User-Agent", abstractHttpRequest.getUserAgent());
 
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("app", abstractHttpRequest.getApp());

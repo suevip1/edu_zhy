@@ -6,9 +6,8 @@ import com.edu.zhy.api.api.http.service.httputiljiagou.Context.PolyvContext;
 import com.edu.zhy.api.api.http.service.httputiljiagou.SendHttpContext;
 import com.edu.zhy.api.api.http.service.httputiljiagou.params.PolyvParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 @Slf4j
 public class PolyvGenerator extends AbstractCreateGenerator<PolyvContext, PolyvParam> {
 

@@ -8,6 +8,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 public class InitApplicationContextUtil {
 
+//    private static AnnotationConfigApplicationContext applicationContext;
+
+
     private static volatile AnnotationConfigApplicationContext applicationContext;
 
     /**

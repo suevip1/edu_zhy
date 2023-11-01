@@ -218,7 +218,7 @@ public class qttTextCheck {
         String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logerror.txt";
         //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\小鱼全球甄选-132414525\\小鱼全球甄选-132414525.json";
+        String logAllFilePath = "C:\\Users\\Admin\\Downloads\\小鱼全球甄选-132414525(1).json";
 
             //写入结果
         String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
