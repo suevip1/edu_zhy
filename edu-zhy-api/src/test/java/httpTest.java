@@ -1,5 +1,5 @@
 import com.edu.zhy.api.api.http.polyv.PolyvHttpUtil;
-import com.edu.zhy.api.api.http.service.httputiljiagou.HttpUtil;
+import com.edu.zhy.api.api.http.service.httputiljiagou.executeabstract.CommonHttpUtil;
 import org.junit.Test;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import javax.annotation.Resource;
  * 访问网页接口Test
  */
 @Service
-public class httpTest extends HttpUtil {
+public class httpTest extends CommonHttpUtil {
 
     @Resource
     private PolyvHttpUtil polyvHttpUtil;

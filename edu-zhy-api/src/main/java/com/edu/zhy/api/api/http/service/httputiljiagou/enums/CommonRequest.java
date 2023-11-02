@@ -12,7 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 public enum CommonRequest {
 
-    UEL(1,"https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json","URL:请求的接口地址"),
+    UEL(1,"https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json","URL:请求的接口地址:GET请求地址"),
     EXAMPLE_URL(2,"","exampleUrl:格式请求地址"),
     CONTENT_TYPE(3,"application/json","contentType:格式: application/json"),
     COOKIE(4,"","cookie:cookie信息 电脑抓"),
@@ -29,7 +29,10 @@ public enum CommonRequest {
     RETRIES(12,"O","retries:注册ol"),
 
 
-    CACHE_CONTROL(13,"no-cache","Cache-Control:请求外部接口(请求头)")
+    CACHE_CONTROL(13,"no-cache","Cache-Control:请求外部接口(请求头)"),
+
+    POST_UEL(14,"https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json","URL:请求的接口地址:POST请求地址")
+
 
     ;
 

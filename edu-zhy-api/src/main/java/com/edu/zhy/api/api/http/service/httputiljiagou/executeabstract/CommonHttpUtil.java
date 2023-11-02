@@ -1,8 +1,8 @@
-package com.edu.zhy.api.api.http.service.httputiljiagou;
+package com.edu.zhy.api.api.http.service.httputiljiagou.executeabstract;
 
 
-import com.edu.zhy.api.api.http.enums.CookieType;
 import com.edu.zhy.api.api.http.service.httputiljiagou.Context.CommonContext;
+import com.edu.zhy.api.api.http.service.httputiljiagou.HttpUtilService;
 import com.edu.zhy.api.api.http.service.httputiljiagou.enums.CommonRequest;
 import com.edu.zhy.api.api.http.service.httputiljiagou.impl.CommonHttpUtilServiceImpl;
 import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
@@ -16,15 +16,23 @@ import java.util.Map;
 
 /**
  * *执行前置层
+ * *这里到时候
  */
 
 @Slf4j
 //@Component
-public abstract class HttpUtil
+public  class CommonHttpUtil
 //        implements ApplicationContextAware
-{
+extends  AbstractHttpUtil{
     //路由的方法
-    protected static Map<Integer , HttpUtilService> httpUtilServiceMap= new HashMap<>();
+    public static Map<Integer , HttpUtilService> httpUtilServiceMap= new HashMap<>();
+
+    //一般远程调用参数
+    private static CommonContext commonContext;
+    private static CommonParam commonParam;
+    //接口属性
+    private static Map<String, String> paramMap = new HashMap<>();
+
 
 
 //    @Override
@@ -54,64 +62,21 @@ public abstract class HttpUtil
      * @param args
      */
     public static void main(String[] args) {
-//
-//        //测试执行
-//        initAnnotationConfigApplicationContextV2();
 
-        //测试执行
-//        initAnnotationConfigApplicationContext(buildCommonContext(true,getMapName,null),buildCommonParam(paramMap));
-
-
-
-        CommonContext commonContext;
-        CommonParam commonParam;
-        //执行
-        //请求参数
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("kdtId","16719442");
-        paramMap.put("alias","fig2cvlk");
-        paramMap.put("pageNumber","2");
-        paramMap.put("pageSize","6");
-        //isRequest为true 必传
-        List<String> getMapName = Arrays.asList("kdtId","alias","pageNumber","pageSize");
-
-        try {
-            CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
-
-            commonContext = buildCommonContext(true, getMapName, null);
-
-            commonParam = buildCommonParam(paramMap);
-
-            //前置效验
-            instance.preCheck(commonContext,commonParam);
-
-//            instance.Execute(buildCommonContext(true,getMapName,null),buildCommonParam(paramMap));
-            //执行
-            instance.Execute(commonContext,commonParam);
-
-
-            InitApplicationContextUtil.closeClient();
-
-        }catch (Exception e){
-            log.error("远程请求失败了 e:{}",e);
-            System.err.println(e);
-        }
-
+        executeGetCommon();
 
     }
 
-    //这里还可以在抽下进行执行
+//    这里还可以在抽下进行执行
 
 
     /**
      * *远程调用执行一般
+     * *get请求
      */
-    public void executeCommon(){
-        CommonContext commonContext;
-        CommonParam commonParam;
+    public static void executeGetCommon(){
         //执行
         //请求参数
-        Map<String, String> paramMap = new HashMap<>();
         paramMap.put("kdtId","16719442");
         paramMap.put("alias","fig2cvlk");
         paramMap.put("pageNumber","2");
@@ -122,14 +87,13 @@ public abstract class HttpUtil
         try {
             CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
 
-            commonContext = buildCommonContext(true, getMapName, null);
+            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.UEL.getName(), true, getMapName, null);
 
-            commonParam = buildCommonParam(paramMap);
+            commonParam = buildAbstractHttpParam(new CommonParam(),paramMap);
 
             //前置效验
             instance.preCheck(commonContext,commonParam);
 
-//            instance.Execute(buildCommonContext(true,getMapName,null),buildCommonParam(paramMap));
             //执行
             instance.Execute(commonContext,commonParam);
 
@@ -143,6 +107,46 @@ public abstract class HttpUtil
 
 
     }
+
+
+    /**
+     * *POST请求(这个还需要测试下)
+     */
+    public static void executePostCommon(){
+
+        //执行
+        //请求参数
+        paramMap.put("kdtId","16719442");
+        paramMap.put("alias","fig2cvlk");
+        paramMap.put("pageNumber","1");
+        paramMap.put("pageSize","6");
+
+        try {
+            CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
+
+            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.POST_UEL.getName(),false, null, null);
+
+            commonParam = buildAbstractHttpParam(new CommonParam(),paramMap);
+
+            //前置效验
+            instance.preCheck(commonContext,commonParam);
+
+            //执行
+            instance.Execute(commonContext,commonParam);
+
+
+            InitApplicationContextUtil.closeClient();
+
+        }catch (Exception e){
+            log.error("executeCommon:远程请求失败了 e:{}",e);
+            System.err.println(e);
+        }
+
+
+    }
+
+
+
 
 
 
@@ -205,42 +209,91 @@ public abstract class HttpUtil
 //    }
 
 
-    /**
-     * *转换到参数
-     * @param isRequest   是否是get请求
-     * @param getMapName GET请求下的网址格式字段重要参数名称
-     * @param args 参数(可不传)
-     * @return
-     */
-    private static CommonContext buildCommonContext(Boolean isRequest , List<String> getMapName,String args){
-        CommonContext commonContext = new CommonContext();
-        commonContext.setUrl(CommonRequest.UEL.getName());
-        commonContext.setIsRequest(isRequest);
-        commonContext.setExampleUrl(CommonRequest.EXAMPLE_URL.getName());
-        commonContext.setGetMapName(getMapName);
-        commonContext.setContentType(CommonRequest.CONTENT_TYPE.getName());
-        commonContext.setCookie(CookieType.COOKIE_TYPE_V1.getCookies());
-        commonContext.setUserAgent(CommonRequest.USER_AGENT.getName());
-        commonContext.setApp(CommonRequest.APP.getName());
-        commonContext.setEnv(CommonRequest.ENV.getName());
-        commonContext.setService(CommonRequest.SERVICE.getName());
-        commonContext.setMethod(CommonRequest.METHOD.getName());
-        //这个参数可以不用传
-        commonContext.setArgs(args);
+//    /**
+//     * *转换到参数
+//     * @param isRequest   是否是get请求
+//     * @param getMapName GET请求下的网址格式字段重要参数名称
+//     * @param args 参数(可不传)
+//     * @return
+//     */
+//    private static CommonContext buildCommonContext(Boolean isRequest , List<String> getMapName,String args){
+//        CommonContext commonContext = new CommonContext();
+//        commonContext.setUrl(CommonRequest.UEL.getName());
+//        commonContext.setIsRequest(isRequest);
+//        commonContext.setExampleUrl(CommonRequest.EXAMPLE_URL.getName());
+//        commonContext.setGetMapName(getMapName);
+//        commonContext.setContentType(CommonRequest.CONTENT_TYPE.getName());
+//        commonContext.setCookie(CookieType.COOKIE_TYPE_V1.getCookies());
+//        commonContext.setUserAgent(CommonRequest.USER_AGENT.getName());
+//        commonContext.setApp(CommonRequest.APP.getName());
+//        commonContext.setEnv(CommonRequest.ENV.getName());
+//        commonContext.setService(CommonRequest.SERVICE.getName());
+//        commonContext.setMethod(CommonRequest.METHOD.getName());
+//        //这个参数可以不用传
+//        commonContext.setArgs(args);
+//
+//        commonContext.setSc(CommonRequest.SC.getName());
+//        commonContext.setTimeout(CommonRequest.TIMEOUT.getName());
+//        commonContext.setRetries(CommonRequest.RETRIES.getName());
+//        commonContext.setCacheControl(CommonRequest.CACHE_CONTROL.getName());
+//        return commonContext;
+//
+//    }
+//
+//
+//    private static CommonParam buildCommonParam(Map<String, String> paramMap){
+//        CommonParam commonParam = new CommonParam();
+//        commonParam.setParamMap(paramMap);
+//        return commonParam;
+//    }
 
-        commonContext.setSc(CommonRequest.SC.getName());
-        commonContext.setTimeout(CommonRequest.TIMEOUT.getName());
-        commonContext.setRetries(CommonRequest.RETRIES.getName());
-        commonContext.setCacheControl(CommonRequest.CACHE_CONTROL.getName());
-        return commonContext;
-
-    }
 
 
-    private static CommonParam buildCommonParam(Map<String, String> paramMap){
-        CommonParam commonParam = new CommonParam();
-        commonParam.setParamMap(paramMap);
-        return commonParam;
-    }
+//
+//    /**
+//     * *使用规范示例远程本地调用
+//     * @param args
+//     */
+//    public static void main(String[] args) {
+////
+////        //测试执行
+////        initAnnotationConfigApplicationContextV2();
+//
+//        //测试执行
+////        initAnnotationConfigApplicationContext(buildCommonContext(true,getMapName,null),buildCommonParam(paramMap));
+//
+//        //执行
+//        //请求参数
+//        paramMap.put("kdtId","16719442");
+//        paramMap.put("alias","fig2cvlk");
+//        paramMap.put("pageNumber","2");
+//        paramMap.put("pageSize","6");
+//        //isRequest为true 必传
+//        List<String> getMapName = Arrays.asList("kdtId","alias","pageNumber","pageSize");
+//
+//        try {
+//            CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
+//
+//            commonContext = buildCommonContext(true, getMapName, null);
+//
+//            commonParam = buildCommonParam(paramMap);
+//
+//            //前置效验
+//            instance.preCheck(commonContext,commonParam);
+//
+////            instance.Execute(buildCommonContext(true,getMapName,null),buildCommonParam(paramMap));
+//            //执行
+//            instance.Execute(commonContext,commonParam);
+//
+//
+//            InitApplicationContextUtil.closeClient();
+//
+//        }catch (Exception e){
+//            log.error("远程请求失败了 e:{}",e);
+//            System.err.println(e);
+//        }
+//
+//
+//    }
 
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class AbstractHttpParam implements Serializable {
+public  class AbstractHttpParam implements Serializable {
     private static final long serialVersionUID = 894225858174287776L;
 
     //目前先不写到时候整合下参数  目前就是继承

@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class AbstractHttpRequest implements Serializable {
+public  class AbstractHttpRequest implements Serializable {
     private static final long serialVersionUID = 1107522469901752984L;
 
     /**
