@@ -63,7 +63,12 @@ extends  AbstractHttpUtil{
      */
     public static void main(String[] args) {
 
+        //get请求
         executeGetCommon();
+
+        //post请求
+        executePostCommon();
+
 
     }
 

@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * *这里只是为了以后的拓展目前只用 CommonHttpUtil 就可以了
+ */
 @Slf4j
 public class PaoLiVayHttpUtil extends AbstractHttpUtil{
 

@@ -71,12 +71,12 @@ public class OKHttpUtils {
             } catch (KeyManagementException e) {
                 e.printStackTrace();
             }
-            HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+//            HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+//                @Override
+//                public boolean verify(String hostname, SSLSession session) {
+//                    return true;
+//                }
+//            };
 
             /** 拦截器压缩http请求体，许多服务器无法解析 */
             Interceptor gzipRequestInterceptor = new Interceptor() {
