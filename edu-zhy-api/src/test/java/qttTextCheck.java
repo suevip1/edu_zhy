@@ -164,12 +164,12 @@ public class qttTextCheck {
 
         try {
             //帅选名称的标识
-            List<String> list = Arrays.asList("0ic8u8qd6-G-q0kiFY_btKtSSF_grGog","0dn0g7vvt-G-q0kiFY_btKtSSF_grGog","0a184104l-G-q0kiFY_btKtSSF_grGog","0j37uot5v-G-q0kiFY_btKtSSF_grGog","0j21tmseo-G-q0kiFY_btKtSSF_grGog","0in5nqerg-G-q0kiFY_btKtSSF_grGog","0ii000ced-G-q0kiFY_btKtSSF_grGog","0iermg6u8-G-q0kiFY_btKtSSF_grGog","0idac1373-G-q0kiFY_btKtSSF_grGog","0gnfo20ml-G-q0kiFY_btKtSSF_grGog","0dflbuuct-G-q0kiFY_btKtSSF_grGog","0bcab4c1r-G-q0kiFY_btKtSSF_grGog","099a2goqm-G-q0kiFY_btKtSSF_grGog");
+            List<String> list = Arrays.asList("0kkafvp18-MjUrGT6lUgsa6hbG_eiUIQ", "0jpavmhvg-MjUrGT6lUgsa6hbG_eiUIQ");
             //不是是敏感词的名称
             List<String> titleList = new ArrayList<>();
             //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\小鱼全球甄选-132414525\\小鱼全球甄选-132414525.json";
+            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\冉冉-132288100\\冉冉-132288100.json";
             Integer i = 0;
 
 //            List<String> lines1 = readLinesFromFile(errorFilePath);
@@ -218,7 +218,7 @@ public class qttTextCheck {
         String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logerror.txt";
         //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-        String logAllFilePath = "C:\\Users\\Admin\\Downloads\\小鱼全球甄选-132414525(1).json";
+        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\冉冉-132288100\\冉冉-132288100.json";
 
             //写入结果
         String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
@@ -478,6 +478,77 @@ public class qttTextCheck {
 
     }
 
+    //分割文档
+    @Test
+    public void writeText(){
+        List<String> list = new ArrayList<>();
+
+        try {
+            List<String> stringList = new ArrayList<>();
+            int i = 0;
+            String line ;
+
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\Niceteam-139177600\\Niceteam-139177600.json";
+
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\Niceteam-139177600\\Niceteam-139177600 - 副本.json";
+
+
+            String fileResultv1 = "C:\\Users\\Admin\\Desktop\\qtt搬家\\Niceteam-139177600\\Niceteam-139177600 - 副本 - 副本.json";
+
+
+
+            File file1 = new File(sourceFile);
+
+            FileInputStream fis = new FileInputStream(file1);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+            FileWriter writer = new FileWriter(fileResult, true);
+
+            FileWriter writerv1 = new FileWriter(fileResultv1, true);
+
+
+            while ((line = br.readLine()) != null) {
+                i++;
+//                System.out.println(i++);
+//                JSONObject jsonObject = JSON.parseObject(line);
+
+                //小于100的生成文档  看情况开放
+                if (stringList.size() < 400){
+
+                    writer.write(line);
+                    writer.write("\n");
+                }
+
+                if (stringList.size() >= 400){
+                    writerv1.write(line);
+                    writerv1.write("\n");
+                }
+
+                stringList.add(line);
+
+            }
+
+
+            System.err.println(stringList.size());
+
+            br.close();
+
+            writer.close();
+
+            writerv1.close();
+
+        }catch (Exception e){
+            log.info("失败了呜呜呜 e:{}",e);
+        }
+
+
+
+
+    }
+
+
+
 
     //效验商品数是否超过200;超过一百的不处理
     //这里还需要加入写入功能生成新的文档
@@ -489,7 +560,7 @@ public class qttTextCheck {
             int i = 0;
             String line ;
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\涛哥跑工厂-132528327\\涛哥跑工厂-132528327.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\Niceteam-139177600\\Niceteam-139177600.json";
 
 //            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\番薯哥供应链供货+136579840\\番薯哥供应链供货空文档.json";
 

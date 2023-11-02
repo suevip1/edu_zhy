@@ -1,8 +1,6 @@
 import com.alibaba.fastjson.JSON;
 import com.edu.zhy.api.api.dto.OfflineOrderHandleContext;
-import com.edu.zhy.api.api.http.service.httputiljiagou.HttpUtilService;
-import com.edu.zhy.api.api.http.service.httputiljiagou.impl.CommonHttpUtilServiceImpl;
-import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
+import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.commons.lang3.StringUtils;
@@ -11,8 +9,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,6 +33,8 @@ public class Test {
             new ThreadFactoryBuilder().setNameFormat("ThreadPool-%d").build());
 
 
+
+    public static String DATE_PATTERN_SIMPLE = "yyyy-MM-dd HH:mm:ss";
 
 
     private static final String CREATE = "2022-12-01 23:59:59";
@@ -327,10 +331,10 @@ public class Test {
 
     @org.junit.Test
     public void hotfixStringV1(){
-//        String dateStr ="20230914";
-//        String pattern ="yyyyMMdd" ;
-//        //获取拉取时间
-//        System.err.println(parseDateString(dateStr,pattern));
+        String dateStr ="20230914";
+        String pattern ="yyyyMMdd" ;
+        //获取拉取时间
+        System.err.println(parseDateString(dateStr,pattern));
 
 
 //        //获取之前的时间
@@ -352,13 +356,12 @@ public class Test {
 
     @org.junit.Test
     public void httpV1(){
-
-        HttpUtilService instance = InitApplicationContextUtil
-                .getInstance(CommonHttpUtilServiceImpl.class);
-
-        System.err.println(instance);
-
-        InitApplicationContextUtil.closeClient();
+//        HttpUtilService instance = InitApplicationContextUtil
+//                .getInstance(CommonHttpUtilServiceImpl.class);
+//
+//        System.err.println(instance);
+//
+//        InitApplicationContextUtil.closeClient();
 
     }
 
@@ -372,10 +375,37 @@ public class Test {
 //        System.err.println(dispatch);
 
 
-        CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
-
-        System.err.println(instance);
+//        CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
+//        System.err.println(instance);
 //        instance.executeCommon();
+
+
+
+
+        String umpStart ="2023-11-01 18:00:00";
+
+        String umpEnd ="2023-12-01 00:00:00";
+        //获取拉取时间
+        Date date = parseDateString(umpStart, DATE_PATTERN_SIMPLE);
+
+        Date date1 = parseDateString(umpEnd, DATE_PATTERN_SIMPLE);
+
+
+
+        Long start =1698832800000L ;
+        Long end = 1701360000000L;
+
+        Long start1 = start / 1000;
+
+
+
+//        compareUmpDate(umpStart,umpEnd,start,end);
+
+
+        boolean b = compareUmpDate(start1 .intValue(), 0, date, null);
+
+        System.err.println(b);
+
 
     }
 
@@ -383,6 +413,86 @@ public class Test {
 
 
 
+
+    /**
+     * 校验商品活动时间 是否在 报名活动时间内
+     * @param umpStart
+     * @param umpEnd
+     * @param start
+     * @param end
+     * @return
+     */
+    private boolean compareUmpDate(int umpStart, int umpEnd, Date start, Date end) {
+        Date secKillBeginAt = transDate(umpStart, DATE_PATTERN_SIMPLE);
+
+        System.err.println(secKillBeginAt);
+//        Date secKillEndAt = transDate(umpEnd, DATE_PATTERN_SIMPLE);
+
+        LocalDateTime secKillBeginLocalDt =
+                toLocalDateTime(secKillBeginAt);
+//        LocalDateTime secKillEndLocalDt =
+//                toLocalDateTime(secKillEndAt);
+
+        LocalDateTime startLocalDt = toLocalDateTime(start);
+//        LocalDateTime endLocalDt = toLocalDateTime(end);
+
+        System.out.println("star:"+secKillBeginLocalDt.compareTo(startLocalDt));
+
+        if (secKillBeginLocalDt.compareTo(startLocalDt) != 0) {
+//            LoggerUtil.info(
+//                    log,
+//                    "getUmpInfoWithTime,  goodsUmpStartTime not the same as start, goodsUmpStart={0}, start={1}",
+//                    secKillBeginLocalDt,
+//                    startLocalDt);
+
+            System.err.println("开始时间效验start:{"+secKillBeginLocalDt.compareTo(startLocalDt));
+
+            return false;
+        }
+
+//        if (secKillEndLocalDt.isBefore(endLocalDt)) {
+////            LoggerUtil.info(
+////                    log,
+////                    "getUmpInfoWithTime, goodsUmpEndTime isBefore endTime, goodsUmpEnd={0}, end={1}",
+////                    secKillEndLocalDt,
+////                    endLocalDt);
+//            System.err.println("结束时间效验end:{"+secKillEndLocalDt.isBefore(endLocalDt));
+//
+//
+//            return false;
+//        }
+        return true;
+    }
+
+
+
+
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    public static LocalDateTime toLocalDateTime(long timestamp) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+    }
+
+
+    /** 将int值转为Date */
+    public static Date transDate(int dateTime, String pattern) {
+
+        try {
+            long timeLong = new Long(dateTime).longValue() * 1000;
+            DateFormat sdf = new SimpleDateFormat(pattern);
+            String format = sdf.format(timeLong);
+            Date date = sdf.parse(format);
+            return date;
+        } catch (Exception e) {
+           throw new BusinessException(-100,"");
+        }
+    }
+
+
+
+    //以上限时折扣效验时间接口
 
 
 
