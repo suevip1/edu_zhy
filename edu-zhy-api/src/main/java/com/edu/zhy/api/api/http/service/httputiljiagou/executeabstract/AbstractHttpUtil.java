@@ -29,7 +29,7 @@ public abstract class AbstractHttpUtil {
         request.setExampleUrl(CommonRequest.EXAMPLE_URL.getName());
         request.setGetMapName(getMapName);
         request.setContentType(CommonRequest.CONTENT_TYPE.getName());
-        request.setCookie(CookieType.COOKIE_TYPE_V1.getCookies());
+        request.setCookie(CookieType.COOKIE_TYPE_V2.getCookies());
         request.setUserAgent(CommonRequest.USER_AGENT.getName());
         request.setApp(CommonRequest.APP.getName());
         request.setEnv(CommonRequest.ENV.getName());

@@ -1,6 +1,7 @@
 package com.edu.zhy.api.api.http.service.httputiljiagou.executeabstract;
 
 import com.edu.zhy.api.api.http.service.httputiljiagou.Context.PolyvContext;
+import com.edu.zhy.api.api.http.service.httputiljiagou.EduLive;
 import com.edu.zhy.api.api.http.service.httputiljiagou.enums.CommonRequest;
 import com.edu.zhy.api.api.http.service.httputiljiagou.impl.PolyvHttpUtilServiceImpl;
 import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
@@ -39,17 +40,26 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
 
         //执行
         //请求参数
-        map.put("kdtId","16719442");
-        map.put("alias","fig2cvlk");
-        map.put("pageNumber","2");
-        map.put("pageSize","6");
-        //isRequest为true 必传
-        List<String> getMapName = Arrays.asList("kdtId","alias","pageNumber","pageSize");
+        String uuid = "52767d007c5711ee9c6f8355bc524372";
+        Map<String, String> headers = new HashMap<>();
+        //执行
+        //请求参数
+        try {
+            headers = EduLive.getHeaders();
+        }catch (Exception e){
+            System.err.println("失败了 呜呜呜" + e);
+        }
 
+        map.put("type","dynamic");
+
+        map.putAll(headers);
+
+        //isRequest为true 必传
+        List<String> getMapName = Arrays.asList("type","token","region");
         try {
             PolyvHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(PolyvHttpUtilServiceImpl.class);
 
-            polyvContext = buildAbstractHttpRequest(new PolyvContext(),CommonRequest.UEL.getName(),true, getMapName, null);
+            polyvContext = buildAbstractHttpRequest(new PolyvContext(),String.format(CommonRequest.UEL.getName(),uuid),true, getMapName, null);
 
             polyvParam = buildAbstractHttpParam(new PolyvParam(),map);
 

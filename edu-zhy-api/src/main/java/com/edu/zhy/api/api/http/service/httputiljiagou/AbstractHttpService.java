@@ -41,10 +41,15 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         String result;
 
         if (httpUtilRequest.getIsRequest()){
-            //get请求一般直接拼参数到url上面
+
+//            System.err.println(httpUtilRequest.getUrl());
+//            //get请求一般直接拼参数到url上面
+//
+//            result = null;
             result = OKHttpUtils.getInstance().sendGet(httpUtilRequest.getUrl(),null);
         }else {
-            //post 请求需要body 和请求头
+//            result = null;
+//            post 请求需要body 和请求头
             result = OKHttpUtils.getInstance()
                     .sendJsonPost(httpUtilRequest.getUrl(), httpUtilRequest.getHeaderMap(),
                             JSON.toJSONString(httpUtilRequest.getBodyMap()));

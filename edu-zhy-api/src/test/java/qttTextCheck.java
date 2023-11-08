@@ -164,12 +164,12 @@ public class qttTextCheck {
 
         try {
             //帅选名称的标识
-            List<String> list = Arrays.asList("0kkafvp18-MjUrGT6lUgsa6hbG_eiUIQ", "0jpavmhvg-MjUrGT6lUgsa6hbG_eiUIQ");
+            List<String> list = Arrays.asList("0kkq4jfbn-YjPZ2M4B--RCopCDdofnVg","0dk3gmooo-YjPZ2M4B--RCopCDdofnVg","0b930omos-YjPZ2M4B--RCopCDdofnVg","0kokde801-YjPZ2M4B--RCopCDdofnVg","0idf0gdn0-YjPZ2M4B--RCopCDdofnVg","0hv6il5lm-YjPZ2M4B--RCopCDdofnVg","0hv6il5u5-YjPZ2M4B--RCopCDdofnVg","0hv6il5k1-YjPZ2M4B--RCopCDdofnVg","0hv6il5p5-YjPZ2M4B--RCopCDdofnVg","0hv6il5k9-YjPZ2M4B--RCopCDdofnVg","0hv6il5kj-YjPZ2M4B--RCopCDdofnVg","0hv6il5kr-YjPZ2M4B--RCopCDdofnVg","0hv6il5jr-YjPZ2M4B--RCopCDdofnVg","0hhol4doo-YjPZ2M4B--RCopCDdofnVg","0g6fn31pr-YjPZ2M4B--RCopCDdofnVg","0g5rfnld5-YjPZ2M4B--RCopCDdofnVg","0g56j4n5t-YjPZ2M4B--RCopCDdofnVg","0fvhhlnug-YjPZ2M4B--RCopCDdofnVg","0etdhh8i7-YjPZ2M4B--RCopCDdofnVg","0etdbpnkt-YjPZ2M4B--RCopCDdofnVg","0etcvpcdp-YjPZ2M4B--RCopCDdofnVg","0etcvdmb8-YjPZ2M4B--RCopCDdofnVg","0etcuq17c-YjPZ2M4B--RCopCDdofnVg","0etcrvsrp-YjPZ2M4B--RCopCDdofnVg","0etco23nc-YjPZ2M4B--RCopCDdofnVg","0etc1tm0u-YjPZ2M4B--RCopCDdofnVg","0erk29bri-YjPZ2M4B--RCopCDdofnVg","0e9vngqsb-YjPZ2M4B--RCopCDdofnVg","0e9vjesm3-YjPZ2M4B--RCopCDdofnVg","0e89ntd5e-YjPZ2M4B--RCopCDdofnVg","0e4qhbltq-YjPZ2M4B--RCopCDdofnVg","0dv74drmh-YjPZ2M4B--RCopCDdofnVg","0dt65djka-YjPZ2M4B--RCopCDdofnVg","0dsi2u6kp-YjPZ2M4B--RCopCDdofnVg","0dse32sla-YjPZ2M4B--RCopCDdofnVg","0dpsmt02f-YjPZ2M4B--RCopCDdofnVg","0ekeaon9c-YjPZ2M4B--RCopCDdofnVg","0di9nddh2-YjPZ2M4B--RCopCDdofnVg","0da1tn255-YjPZ2M4B--RCopCDdofnVg","0c21e9ges-YjPZ2M4B--RCopCDdofnVg","0c1bcvleg-YjPZ2M4B--RCopCDdofnVg","0bukm8ua9-YjPZ2M4B--RCopCDdofnVg","0bgqpolb6-YjPZ2M4B--RCopCDdofnVg","0bb10rdk0-YjPZ2M4B--RCopCDdofnVg","0gvl28j1q-YjPZ2M4B--RCopCDdofnVg","0fnq74ov8-YjPZ2M4B--RCopCDdofnVg","0g4o6j8f7-YjPZ2M4B--RCopCDdofnVg","0f8e77lmj-YjPZ2M4B--RCopCDdofnVg","0etd9s1k6-YjPZ2M4B--RCopCDdofnVg","0etd9fo1e-YjPZ2M4B--RCopCDdofnVg","0etc8j66o-YjPZ2M4B--RCopCDdofnVg","0etc87mq4-YjPZ2M4B--RCopCDdofnVg","0ed8err7n-YjPZ2M4B--RCopCDdofnVg","0dvqme5ue-YjPZ2M4B--RCopCDdofnVg","0dt8ptf6j-YjPZ2M4B--RCopCDdofnVg","0dsjr14f2-YjPZ2M4B--RCopCDdofnVg","0dpg67uhp-YjPZ2M4B--RCopCDdofnVg","0cp7k6foq-YjPZ2M4B--RCopCDdofnVg","0clut5me6-YjPZ2M4B--RCopCDdofnVg","0cb1dq3bt-YjPZ2M4B--RCopCDdofnVg","0c1bb2180-YjPZ2M4B--RCopCDdofnVg","0c17khctf-YjPZ2M4B--RCopCDdofnVg","0bjm6mo37-YjPZ2M4B--RCopCDdofnVg","0bjm6j6lu-YjPZ2M4B--RCopCDdofnVg","0ata6sclu-YjPZ2M4B--RCopCDdofnVg","0a3e7khka-YjPZ2M4B--RCopCDdofnVg","0a26vfb2p-YjPZ2M4B--RCopCDdofnVg","09vheg1gg-YjPZ2M4B--RCopCDdofnVg","09lcnug13-YjPZ2M4B--RCopCDdofnVg","09ipihshm-YjPZ2M4B--RCopCDdofnVg","08qroup59-YjPZ2M4B--RCopCDdofnVg","05tlg0716-YjPZ2M4B--RCopCDdofnVg","04127ua2r-YjPZ2M4B--RCopCDdofnVg","03m2gkkh6-YjPZ2M4B--RCopCDdofnVg","02k1u951i-YjPZ2M4B--RCopCDdofnVg","813a224df1880ed73168253aefa468d9","ae49610cb8cba8a59c50fed53432a83e");
             //不是是敏感词的名称
             List<String> titleList = new ArrayList<>();
             //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\冉冉-132288100\\冉冉-132288100.json";
+            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\成风-147689704\\成风-147689704.json";
             Integer i = 0;
 
 //            List<String> lines1 = readLinesFromFile(errorFilePath);
@@ -182,7 +182,7 @@ public class qttTextCheck {
                 String title = resultAll.getString("title");
 
                 if (list.contains(collectionActivityNoAll)){
-                    titleList.add(title+"+");
+                    titleList.add(title+";");
                 }
 
             }
@@ -218,7 +218,7 @@ public class qttTextCheck {
         String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logerror.txt";
         //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\冉冉-132288100\\冉冉-132288100.json";
+        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\成风-147689704\\成风-147689704.json";
 
             //写入结果
         String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
@@ -299,7 +299,11 @@ public class qttTextCheck {
 
             String sourceFile = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
 
-            String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsFilter.txt";
+//            String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsFilter.txt";
+
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\成风-147689704\\成风-147689704 - 副本.json";
+
+
 
             File file1 = new File(sourceFile);
 

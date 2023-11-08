@@ -1,6 +1,8 @@
 package com.edu.zhy.api.api.spring;
 
-public class FrameworkThreadPoolExecutor extends java.util.concurrent.ThreadPoolExecutor {
+import java.util.concurrent.ThreadPoolExecutor;
+
+public class FrameworkThreadPoolExecutor extends ThreadPoolExecutor {
     public FrameworkThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, @org.jetbrains.annotations.NotNull java.util.concurrent.TimeUnit unit, @org.jetbrains.annotations.NotNull java.util.concurrent.BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }

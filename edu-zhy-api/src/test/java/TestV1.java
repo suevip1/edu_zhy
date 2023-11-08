@@ -19,6 +19,9 @@ public class TestV1 {
 
     private static final String TIME_HMS_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
+
+    private static long ONE_MINUTES = 1 * 60 * 1000L;
+
     @Test
     public void zhyV1(){
         Long start =1698832800000L ;
@@ -31,6 +34,19 @@ public class TestV1 {
 //        System.err.println(b1);
     }
 
+
+    @Test
+    public void zhym2(){
+
+        long executeTime = getExecuteTime();
+
+        System.err.println(executeTime);
+    }
+
+
+    private long getExecuteTime() {
+        return System.currentTimeMillis() + ONE_MINUTES;
+    }
 
     //ebiz.spotlight   的效验时间
 

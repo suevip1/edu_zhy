@@ -128,6 +128,14 @@
         </dependency>
 
 
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.dianping.cat/cat-client &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.dianping.cat</groupId>-->
+<!--            <artifactId>cat-client</artifactId>-->
+<!--            <version>2.0.5-RELEASE</version>-->
+<!--        </dependency>-->
+
+
 
         <dependency>
             <groupId>com.google.guava</groupId>

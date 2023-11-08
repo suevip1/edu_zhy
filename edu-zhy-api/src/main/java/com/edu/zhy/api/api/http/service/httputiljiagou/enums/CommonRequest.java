@@ -12,7 +12,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public enum CommonRequest {
 
-    UEL(1,"https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json","URL:请求的接口地址:GET请求地址"),
+    //https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json
+    UEL(1,"https://api.netless.link/v5/services/conversion/tasks/%s","URL:请求的接口地址:GET请求地址"),
     EXAMPLE_URL(2,"","exampleUrl:格式请求地址"),
     CONTENT_TYPE(3,"application/json","contentType:格式: application/json"),
     COOKIE(4,"","cookie:cookie信息 电脑抓"),

@@ -66,8 +66,8 @@ extends  AbstractHttpUtil{
         //get请求
         executeGetCommon();
 
-        //post请求
-        executePostCommon();
+//        //post请求
+//        executePostCommon();
 
 
     }
@@ -80,14 +80,11 @@ extends  AbstractHttpUtil{
      * *get请求
      */
     public static void executeGetCommon(){
-        //执行
-        //请求参数
-        paramMap.put("kdtId","16719442");
-        paramMap.put("alias","fig2cvlk");
-        paramMap.put("pageNumber","2");
-        paramMap.put("pageSize","6");
+
+        paramMap.put("type","dynamic");
+
         //isRequest为true 必传
-        List<String> getMapName = Arrays.asList("kdtId","alias","pageNumber","pageSize");
+        List<String> getMapName = Arrays.asList("type","token","region");
 
         try {
             CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
