@@ -1,10 +1,12 @@
 import com.alibaba.fastjson.JSON;
 import com.edu.zhy.api.api.visibility.SwitchCacheKey;
 import com.edu.zhy.api.api.visibility.VisibilityConfigDTO;
+import com.edu.zhy.api.api.web.dto.DelayTaskMessage;
 import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
@@ -12,6 +14,7 @@ import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TestV1 {
@@ -37,10 +40,79 @@ public class TestV1 {
 
     @Test
     public void zhym2(){
+//
+//        long executeTime = getExecuteTime();
+//
+//        System.err.println(executeTime);
 
-        long executeTime = getExecuteTime();
 
-        System.err.println(executeTime);
+//        Integer min = null;
+//
+//        if (Objects.isNull(min)){
+//            System.err.println(min);
+//        }
+
+//
+//        Date date = new Date();
+//
+//        System.err.println(date);
+
+        String extraInfo = null;
+
+
+        if (StringUtils.isBlank(extraInfo)){
+            System.err.println(extraInfo);
+
+        }
+
+
+//        Integer tig = 55;
+//        Integer hh = null;
+//
+//
+//        try {
+//            if (Objects.equals(tig,hh)){
+//                System.err.println(true);
+//            }
+//
+//            System.err.println(false);
+//        }catch (Exception e){
+//            System.err.println("11:"+ e);
+//        }
+
+
+//
+//        long time = tig * 60L * 1000;
+//
+//        System.err.println(time);
+
+//
+//        String string = "1";
+//
+//        if (Objects.equals(string,1)){
+//
+//            System.err.println("相等不相等");
+//        }
+
+
+    }
+
+
+    @Test
+    public void  mm1(){
+        DelayTaskMessage delayTaskMessage = new DelayTaskMessage();
+
+        if (Objects.isNull(delayTaskMessage)){
+            System.err.println(delayTaskMessage);
+        }
+
+        String taskType = delayTaskMessage.getTaskType();
+        if (taskType == null){
+            System.err.println(taskType);
+
+        }
+
+
     }
 
 

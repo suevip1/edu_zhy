@@ -1,5 +1,8 @@
 import com.edu.zhy.api.api.http.polyv.PolyvHttpUtil;
 import com.edu.zhy.api.api.http.service.httputiljiagou.executeabstract.CommonHttpUtil;
+import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
+import com.edu.zhy.api.api.web.dto.DelayTaskMessage;
+import com.edu.zhy.api.api.web.service.DelayTaskCallbackServiceImpl;
 import org.junit.Test;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +46,16 @@ public class httpTest extends CommonHttpUtil {
 
     @Test
     public void httpV2(){
+
+        DelayTaskCallbackServiceImpl instance = InitApplicationContextUtil.getInstance(DelayTaskCallbackServiceImpl.class);
+        DelayTaskMessage message = new DelayTaskMessage();
+        message.setTaskType("");
+        message.setBizExtraID("1");
+        message.setBizID("1");
+        message.setExtra("1");
+        message.setDelayEndTime(System.currentTimeMillis());
+
+        instance.tspCallBackExecuteCore(message);
 
 
     }

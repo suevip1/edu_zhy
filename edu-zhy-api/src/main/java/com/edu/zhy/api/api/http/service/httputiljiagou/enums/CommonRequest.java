@@ -19,11 +19,11 @@ public enum CommonRequest {
     COOKIE(4,"","cookie:cookie信息 电脑抓"),
     USER_AGENT(5,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36","userAgent:电脑信息"),
     APP(6,"ebiz-owl","app:内部访问应用  owl-live"),
-    ENV(7,"","env:内部访问应用环境 pre"),
-    SERVICE(8,"","service : 接口路径:com.youzan.owl.live.api.live.video.EduPolyvRemakesPlayBackFacade"),
-    METHOD(9,"","method:请求得方法"),
+    ENV(7,"qa","env:内部访问应用环境 pre"),
+    SERVICE(8,"com.youzan.owl.live.api.live.video.LiveFlowMaxViewerWhiteFacade","service : 接口路径:com.youzan.owl.live.api.live.video.EduPolyvRemakesPlayBackFacade"),
+    METHOD(9,"addViewerWhite","method:请求得方法"),
 
-    SC(10,"","sc:内部sc环境"),
+    SC(10,"prj0057992","sc:内部sc环境"),
 
     TIMEOUT(11,"10000","timeout:接口请求秒数"),
 
@@ -32,7 +32,7 @@ public enum CommonRequest {
 
     CACHE_CONTROL(13,"no-cache","Cache-Control:请求外部接口(请求头)"),
 
-    POST_UEL(14,"https://shop16911610.youzan.com/wscshop/edu/course/group/findItemGroupPageForWym.json","URL:请求的接口地址:POST请求地址")
+    POST_UEL(14,"com.youzan.owl.live.api.live.video.LiveFlowMaxViewerWhiteFacade.addViewerWhite","URL:请求的接口地址:POST请求地址")
 
 
     ;

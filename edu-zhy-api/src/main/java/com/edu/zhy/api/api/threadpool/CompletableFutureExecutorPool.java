@@ -5,10 +5,12 @@ import com.alibaba.dubbo.common.threadpool.support.fixed.FixedThreadPool;
 import com.edu.zhy.api.api.spring.FrameworkThreadPoolExecutor;
 import com.edu.zhy.api.api.threadpool.runnableUtil.FrameworkRunnable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.Data;
 
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
+@Data
 public class CompletableFutureExecutorPool {
 
     private static final Integer CORE_SIZE = 100;
@@ -16,6 +18,11 @@ public class CompletableFutureExecutorPool {
     private static final Integer MAX_SIZE = 200;
 
     private static final Long KEEP_TIME = 200L;
+
+    private final ScheduledExecutorService scheduledExecutorService;
+
+
+
 
 //    private static  ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(CORE_SIZE, MAX_SIZE, KEEP_TIME,
 //            TimeUnit.SECONDS, new LinkedBlockingQueue<>(1000), new ThreadFactoryBuilder().setNameFormat("").build(),
@@ -89,9 +96,9 @@ public class CompletableFutureExecutorPool {
     //• workQueue:new LinkedBlockingQueue<Runnable>()
     private static FixedThreadPool fixedThreadPool = new FixedThreadPool();
 
-
-
-
+//    public CompletableFutureExecutorPool(ScheduledExecutorService scheduledExecutorService) {
+//        this.scheduledExecutorService = scheduledExecutorService;
+//    }
 
 
     //ScheduledThreadPool：
@@ -125,6 +132,17 @@ public class CompletableFutureExecutorPool {
     }
 
 
+
+    public static void m3(){
+
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+
+
+
+    }
+
+
+
     public static String m2(){
 
         System.err.println(System.currentTimeMillis());
@@ -144,26 +162,22 @@ public class CompletableFutureExecutorPool {
 
 
     public static void main(String[] args) {
-//        frameWorkRunnableFuture(linkedBlockingExecutor,() -> m2());
 
-        frameWorkRunnableFuture(linkedBlockingExecutor, () -> {
-            m2();
-
-            m1();
-
-        } );
-
-//        frameWorkRunnableFuture(linkedBlockingExecutor, () -> m1());
-
-
-
-//        CompletableFuture<String> stringCompletableFuture = frameWorkCallableFuture(linkedBlockingExecutorV2, () -> m2());
+//        frameWorkRunnableFuture(linkedBlockingExecutor, () -> {
+//            m2();
 //
-//        CompletableFuture<String> stringCompletableFuture1 = frameWorkCallableFuture(linkedBlockingExecutorV2, () -> m1());
+//            m1();
 //
-//        CompletableFuture.allOf(stringCompletableFuture,stringCompletableFuture1);
-//
-//        System.err.println(stringCompletableFuture.join()+ ":"+stringCompletableFuture1.join());
+//        } );
+
+
+        CompletableFuture<String> stringCompletableFuture = frameWorkCallableFuture(linkedBlockingExecutorV2, () -> m2());
+
+        CompletableFuture<String> stringCompletableFuture1 = frameWorkCallableFuture(linkedBlockingExecutorV2, () -> m1());
+
+        CompletableFuture.allOf(stringCompletableFuture,stringCompletableFuture1);
+
+        System.err.println(stringCompletableFuture.join()+ ":"+stringCompletableFuture1.join());
 
 
     }
