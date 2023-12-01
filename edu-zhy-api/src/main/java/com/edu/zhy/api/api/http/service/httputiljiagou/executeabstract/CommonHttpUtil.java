@@ -126,7 +126,7 @@ extends  AbstractHttpUtil{
 
         //执行
         //请求参数
-        paramMap.put("roomTypeIds","[330]");
+        paramMap.put("roomTypeIds","[328]");
         paramMap.put("saleProject","{\"advanceBookingDay\":0,\"breakfast\":22,\"buyLimitCycle\":0,\"buyLimitType\":0,\"buyLimitValue\":0,\"cancelRule\":0,\"continuousStayDay\":0,\"discountType\":0,\"hotelId\":0,\"id\":0,\"kdtId\":55,\"name\":\"HAHAHAH\",\"operator\":{\"adminId\":8226304108,\"kdtId\":55},\"originPrice\":10,\"pointRewardType\":0,\"roomStock\":2,\"roomTypeId\":0,\"saleDesc\":\"11\",\"saleVolume\":0,\"umpLevel\":[],\"umpRealLevel\":[],\"umpTags\":[],\"shopOrgId\":149385425}");
 
 

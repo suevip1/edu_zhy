@@ -250,7 +250,7 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         headerMap.put("Cookie", abstractHttpRequest.getCookie());
         headerMap.put("User-Agent", abstractHttpRequest.getUserAgent());
         headerMap.put("X-Request-Protocol","dubbo");
-        headerMap.put("sc", abstractHttpRequest.getSc());
+//        headerMap.put("X-Service-Chain", "{"+"name"+":"+abstractHttpRequest.getSc()+"}");
 
 
 //        Map<String, Object> bodyMap = new HashMap<>();
@@ -298,7 +298,6 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         headerMap.put("Content-Type", abstractHttpRequest.getContentType());
         headerMap.put("Cookie", abstractHttpRequest.getCookie());
         headerMap.put("User-Agent", abstractHttpRequest.getUserAgent());
-        headerMap.put("X-Request-Protocol","dubbo");
 
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("app", abstractHttpRequest.getApp());
