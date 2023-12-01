@@ -27,6 +27,9 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
     //接口属性
     private static Map<String, String> map = new HashMap<>();
 
+    //post/get 请求参数转换
+    private static Map<String,Integer> mapName = new HashMap<>();
+
 
     public static void main(String[] args) {
 
@@ -59,7 +62,7 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
         try {
             PolyvHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(PolyvHttpUtilServiceImpl.class);
 
-            polyvContext = buildAbstractHttpRequest(new PolyvContext(),String.format(CommonRequest.UEL.getName(),uuid),true, getMapName, null);
+            polyvContext = buildAbstractHttpRequest(new PolyvContext(),String.format(CommonRequest.UEL.getName(),uuid),true, getMapName, null,null);
 
             polyvParam = buildAbstractHttpParam(new PolyvParam(),map);
 
@@ -96,10 +99,11 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
         map.put("pageNumber","2");
         map.put("pageSize","6");
 
+
         try {
             PolyvHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(PolyvHttpUtilServiceImpl.class);
 
-            polyvContext = buildAbstractHttpRequest (new PolyvContext(),CommonRequest.POST_UEL.getName(),false, null, null);
+            polyvContext = buildAbstractHttpRequest (new PolyvContext(),CommonRequest.POST_UEL.getName(),false, null, null,mapName);
 
             polyvParam = buildAbstractHttpParam(new PolyvParam(),map);
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -38,6 +39,15 @@ public  class AbstractHttpRequest implements Serializable {
      * *需要自己排好序哈
      */
     private List<String> getMapName;
+
+
+    /**
+     * *post请求的参数转换格式重要参数
+     * * 格式：<数字.转换名称>
+     * *<1,"">
+     * *
+     */
+    Map<String,Integer> postMapName;
 
 
 

@@ -164,12 +164,12 @@ public class qttTextCheck {
 
         try {
             //帅选名称的标识
-            List<String> list = Arrays.asList("0kmp6dai8-smMPFbulcJm50CWL1lWn-Q");
+            List<String> list = Arrays.asList("0kln58grn-QSv2EJMURI4mHkO1ymhkFw","0i4glr533-QSv2EJMURI4mHkO1ymhkFw","0l0ne52ph-QSv2EJMURI4mHkO1ymhkFw","0je8c0as9-QSv2EJMURI4mHkO1ymhkFw","0ihcrb6ce-QSv2EJMURI4mHkO1ymhkFw","0htglojlb-QSv2EJMURI4mHkO1ymhkFw","0gearfmjc-QSv2EJMURI4mHkO1ymhkFw","0g3bbv737-QSv2EJMURI4mHkO1ymhkFw","0b1nie58m-QSv2EJMURI4mHkO1ymhkFw","09b010tot-QSv2EJMURI4mHkO1ymhkFw","08apemnfa-QSv2EJMURI4mHkO1ymhkFw","07t9ku464-QSv2EJMURI4mHkO1ymhkFw","07eoec3sn-QSv2EJMURI4mHkO1ymhkFw","07pglm631-QSv2EJMURI4mHkO1ymhkFw");
 
             List<String> titleList = new ArrayList<>();
             //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\西品好物-135027172\\西品好物-135027172.json";
+            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\强哥启蒙-129738707\\强哥启蒙-129738707.json";
             Integer i = 0;
 
 //            List<String> lines1 = readLinesFromFile(errorFilePath);
@@ -218,7 +218,7 @@ public class qttTextCheck {
         String errorFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logerror.txt";
         //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\西品好物-135027172\\西品好物-135027172.json";
+        String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\强哥启蒙-129738707\\强哥启蒙-129738707.json";
 
             //写入结果
         String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsError.txt";
@@ -301,7 +301,7 @@ public class qttTextCheck {
 
 //            String fileResult = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\sensitiveWordsFilter.txt";
 
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\西品好物-135027172\\西品好物-135027172 - 副本.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\强哥启蒙-129738707\\强哥启蒙-129738707 - 副本.json";
 
 
 
@@ -423,13 +423,13 @@ public class qttTextCheck {
 
         try {
             //取店铺后两位
-            String kdtId ="83";
+            String kdtId ="62";
 
             String line;
             int i = 0;
 
-            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\极致拉人熊猫+131523583\\（好友已满）极致拉人能猫-131523583.json";
-            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\极致拉人熊猫+131523583\\（好友已满）极致拉人能猫-131523583 - 副本.json";
+            String sourceFile = "C:\\Users\\Admin\\Desktop\\qtt搬家\\品牌家具账号-132136062\\品牌家具账号-132136062 （2）.json";
+            String fileResult = "C:\\Users\\Admin\\Desktop\\qtt搬家\\品牌家具账号-132136062\\品牌家具账号-132136062 （2） - 副本.json";
 
             File file1 = new File(sourceFile);
 

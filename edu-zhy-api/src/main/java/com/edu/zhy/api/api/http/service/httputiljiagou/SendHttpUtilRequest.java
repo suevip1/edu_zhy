@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -22,7 +23,7 @@ public class SendHttpUtilRequest {
     private Boolean isRequest;
 
     //POST请求body参数
-    private Map<String, Object> bodyMap;
+    private Map<String, Object> bodyMap = new HashMap<>();
     //POST请求header参数
     private Map<String, String> headerMap;
 

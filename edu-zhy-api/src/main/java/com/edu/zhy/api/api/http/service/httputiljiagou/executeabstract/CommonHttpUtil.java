@@ -4,6 +4,7 @@ package com.edu.zhy.api.api.http.service.httputiljiagou.executeabstract;
 import com.edu.zhy.api.api.http.service.httputiljiagou.Context.CommonContext;
 import com.edu.zhy.api.api.http.service.httputiljiagou.HttpUtilService;
 import com.edu.zhy.api.api.http.service.httputiljiagou.enums.CommonRequest;
+import com.edu.zhy.api.api.http.service.httputiljiagou.enums.PostParamFormat;
 import com.edu.zhy.api.api.http.service.httputiljiagou.impl.CommonHttpUtilServiceImpl;
 import com.edu.zhy.api.api.http.service.httputiljiagou.initutil.InitApplicationContextUtil;
 import com.edu.zhy.api.api.http.service.httputiljiagou.params.CommonParam;
@@ -32,6 +33,8 @@ extends  AbstractHttpUtil{
     private static CommonParam commonParam;
     //接口属性
     private static Map<String, String> paramMap = new HashMap<>();
+
+    private static Map<String,Integer> postMapName = new HashMap<>();
 
 
 
@@ -62,17 +65,20 @@ extends  AbstractHttpUtil{
      * @param args
      */
     public static void main(String[] args) {
+        //只需要改下这里就好了
+        Boolean check = false;
 
-        //get请求
-        executeGetCommon();
 
-//        //post请求
-//        executePostCommon();
-
+        if (check){
+            //get请求
+            executeGetCommon();
+        }else {
+            //post请求
+            executePostCommon();
+        }
 
     }
 
-//    这里还可以在抽下进行执行
 
 
     /**
@@ -89,7 +95,7 @@ extends  AbstractHttpUtil{
         try {
             CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
 
-            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.UEL.getName(), true, getMapName, null);
+            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.UEL.getName(), true, getMapName, null,null);
 
             commonParam = buildAbstractHttpParam(new CommonParam(),paramMap);
 
@@ -118,15 +124,17 @@ extends  AbstractHttpUtil{
 
         //执行
         //请求参数
-        paramMap.put("kdtId","16719442");
-        paramMap.put("alias","fig2cvlk");
-        paramMap.put("pageNumber","1");
-        paramMap.put("pageSize","6");
+        paramMap.put("roomTypeIds","[330]");
+        paramMap.put("saleProject","{\"advanceBookingDay\":0,\"breakfast\":22,\"buyLimitCycle\":0,\"buyLimitType\":0,\"buyLimitValue\":0,\"cancelRule\":0,\"continuousStayDay\":0,\"discountType\":0,\"hotelId\":0,\"id\":0,\"kdtId\":98126731,\"name\":\"ceshshsh1\",\"operator\":{\"adminId\":16473014943,\"kdtId\":98126731},\"originPrice\":10,\"pointRewardType\":0,\"roomStock\":2,\"roomTypeId\":0,\"saleDesc\":\"11\",\"saleVolume\":0,\"umpLevel\":[],\"umpRealLevel\":[],\"umpTags\":[],\"shopOrgId\":149385425}");
+
+
+        postMapName.put("roomTypeIds",PostParamFormat.ARRAY_VALUE.getValue());
+        postMapName.put("saleProject",PostParamFormat.OBJECT_VALUE.getValue());
 
         try {
             CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
 
-            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.POST_UEL.getName(),false, null, null);
+            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.POST_UEL.getName(),false, null, null,postMapName);
 
             commonParam = buildAbstractHttpParam(new CommonParam(),paramMap);
 

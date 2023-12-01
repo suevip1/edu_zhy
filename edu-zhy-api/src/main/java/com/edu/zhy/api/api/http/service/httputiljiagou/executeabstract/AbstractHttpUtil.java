@@ -22,7 +22,7 @@ public abstract class AbstractHttpUtil {
      * @param <T>
      * @return
      */
-    public static  <T extends AbstractHttpRequest> T  buildAbstractHttpRequest(T request ,String url ,Boolean isRequest , List<String> getMapName, String args ){
+    public static  <T extends AbstractHttpRequest> T  buildAbstractHttpRequest(T request ,String url ,Boolean isRequest , List<String> getMapName, String args,Map<String,Integer> postMapName ){
 
         request.setUrl(url);
         request.setIsRequest(isRequest);
@@ -37,6 +37,8 @@ public abstract class AbstractHttpUtil {
         request.setMethod(CommonRequest.METHOD.getName());
         //这个参数可以不用传
         request.setArgs(args);
+
+        request.setPostMapName(postMapName);
 
         request.setSc(CommonRequest.SC.getName());
         request.setTimeout(CommonRequest.TIMEOUT.getName());

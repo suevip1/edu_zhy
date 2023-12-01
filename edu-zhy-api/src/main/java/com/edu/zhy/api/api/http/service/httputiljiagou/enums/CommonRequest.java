@@ -20,8 +20,8 @@ public enum CommonRequest {
     USER_AGENT(5,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36","userAgent:电脑信息"),
     APP(6,"ebiz-owl","app:内部访问应用  owl-live"),
     ENV(7,"qa","env:内部访问应用环境 pre"),
-    SERVICE(8,"com.youzan.owl.live.api.live.video.LiveFlowMaxViewerWhiteFacade","service : 接口路径:com.youzan.owl.live.api.live.video.EduPolyvRemakesPlayBackFacade"),
-    METHOD(9,"addViewerWhite","method:请求得方法"),
+    SERVICE(8,"com.youzan.ebiz.mall.rigel.api.hotel.service.SaleProjectService","service : 接口路径:"),
+    METHOD(9,"batchCreateSaleProject","method:请求得方法"),
 
     SC(10,"prj0057992","sc:内部sc环境"),
 
@@ -32,7 +32,7 @@ public enum CommonRequest {
 
     CACHE_CONTROL(13,"no-cache","Cache-Control:请求外部接口(请求头)"),
 
-    POST_UEL(14,"com.youzan.owl.live.api.live.video.LiveFlowMaxViewerWhiteFacade.addViewerWhite","URL:请求的接口地址:POST请求地址")
+    POST_UEL(14,"http://tether-qa.s.qima-inc.com:8680/soa/com.youzan.ebiz.mall.rigel.api.hotel.service.SaleProjectService/batchCreateSaleProject","URL:请求的接口地址:POST请求地址")
 
 
     ;

@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -205,8 +206,8 @@ public class OKHttpUtils {
 
     }
 
-    public String sendJsonPost(String url, Map<String, String> headers, String body) {
-        RequestBody requestBody = RequestBody.create(JSON, body);
+    public String sendJsonPost(String url, Map<String, String> headers, List<String> body) {
+        RequestBody requestBody = RequestBody.create(JSON, String.valueOf(body));
         Request.Builder requestBuilder = new Request.Builder()
                 .post(requestBody)
                 .url(url);
