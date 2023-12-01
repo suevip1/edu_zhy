@@ -32,7 +32,9 @@ public enum CommonRequest {
 
     CACHE_CONTROL(13,"no-cache","Cache-Control:请求外部接口(请求头)"),
 
-    POST_UEL(14,"http://tether-qa.s.qima-inc.com:8680/soa/com.youzan.ebiz.mall.rigel.api.hotel.service.SaleProjectService/batchCreateSaleProject","URL:请求的接口地址:POST请求地址")
+    POST_UEL(14,"http://tether-qa.s.qima-inc.com:8680/soa/com.youzan.ebiz.mall.rigel.api.hotel.service.SaleProjectService/batchCreateSaleProject","URL:请求的接口地址:POST请求地址"),
+
+    POST_URL_ZAN(15,"","公司的基础平台网址")
 
 
     ;

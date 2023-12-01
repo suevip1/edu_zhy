@@ -26,6 +26,14 @@ public  class AbstractHttpRequest implements Serializable {
      */
     private Boolean isRequest;
 
+
+    /**
+     * true 为公司内容预发线上请求
+     * *false 为可以打到外部的请求
+     * */
+    private Boolean checkZanPost;
+
+
     /**
      * *GET请求下的网址格式
      * *get请求需要的（这个暂时可以先不用;目前没想到验证方式）

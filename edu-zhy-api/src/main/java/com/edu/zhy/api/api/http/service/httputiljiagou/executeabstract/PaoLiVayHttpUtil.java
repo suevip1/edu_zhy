@@ -62,7 +62,7 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
         try {
             PolyvHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(PolyvHttpUtilServiceImpl.class);
 
-            polyvContext = buildAbstractHttpRequest(new PolyvContext(),String.format(CommonRequest.UEL.getName(),uuid),true, getMapName, null,null);
+            polyvContext = buildAbstractHttpRequest(new PolyvContext(),String.format(CommonRequest.UEL.getName(),uuid),true, getMapName, null,null,null);
 
             polyvParam = buildAbstractHttpParam(new PolyvParam(),map);
 
@@ -103,7 +103,7 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
         try {
             PolyvHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(PolyvHttpUtilServiceImpl.class);
 
-            polyvContext = buildAbstractHttpRequest (new PolyvContext(),CommonRequest.POST_UEL.getName(),false, null, null,mapName);
+            polyvContext = buildAbstractHttpRequest (new PolyvContext(),CommonRequest.POST_UEL.getName(),false, null, null,mapName,false);
 
             polyvParam = buildAbstractHttpParam(new PolyvParam(),map);
 

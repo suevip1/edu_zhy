@@ -22,10 +22,13 @@ public abstract class AbstractHttpUtil {
      * @param <T>
      * @return
      */
-    public static  <T extends AbstractHttpRequest> T  buildAbstractHttpRequest(T request ,String url ,Boolean isRequest , List<String> getMapName, String args,Map<String,Integer> postMapName ){
+    public static  <T extends AbstractHttpRequest> T  buildAbstractHttpRequest(T request ,String url ,Boolean isRequest ,
+                                                                               List<String> getMapName, String args,Map<String,Integer> postMapName
+    ,Boolean checkZanPost){
 
         request.setUrl(url);
         request.setIsRequest(isRequest);
+        request.setCheckZanPost(checkZanPost);
         request.setExampleUrl(CommonRequest.EXAMPLE_URL.getName());
         request.setGetMapName(getMapName);
         request.setContentType(CommonRequest.CONTENT_TYPE.getName());

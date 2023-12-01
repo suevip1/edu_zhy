@@ -24,6 +24,13 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
         extends AbstractGeneratorApplication
         implements HttpUtilService<K , V , T > {
 
+    private static SendHttpUtilRequest sendHttpUtilRequest = new SendHttpUtilRequest();
+
+    private static Map<String, Object> map = new HashMap<>();
+
+    private static List<Object> argList = new ArrayList<>();
+
+    private static Map<String, String> paramMap = new HashMap<>();
 
 
     @Override
@@ -68,11 +75,11 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
             throw new IllegalStateException("请求失败，返回code!=200");
         }
 
-        Map<String, Object> dataMap = Optional.ofNullable((Map<String, Object>) resultMap.get("data")).orElse(null);
-        if (dataMap.isEmpty()){
-            System.out.println(result);
-            throw new IllegalStateException("请求失败，返回数据为空");
-        }
+//        Map<String, Object> dataMap = Optional.ofNullable((Map<String, Object>) resultMap.get("data")).orElse(null);
+//        if (dataMap.isEmpty()){
+//            System.out.println(result);
+//            throw new IllegalStateException("请求失败，返回数据为空");
+//        }
 
 
         System.out.println("请求成功的数据:{"+result+"}");
@@ -144,13 +151,18 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
             log.info("buildGetOrPost 失败参数有为空的 sendHttpContext:{}",sendHttpContext);
             return request;
         }
+        Boolean checkZanPost = sendHttpContext.getAbstractHttpRequest().getCheckZanPost();
 
         if (sendHttpContext.getAbstractHttpRequest().getIsRequest()){
             //这里get请求转换
             request = buildGet(sendHttpContext.getAbstractHttpRequest(),sendHttpContext.getAbstractHttpParam(),request);
         }else {
             //这里post请求转换
-            request = buildPost(sendHttpContext.getAbstractHttpRequest(),sendHttpContext.getAbstractHttpParam());
+            if (checkZanPost){
+                request = buildPostZan(sendHttpContext.getAbstractHttpRequest(),sendHttpContext.getAbstractHttpParam());
+            }else {
+                request = buildPost(sendHttpContext.getAbstractHttpRequest(),sendHttpContext.getAbstractHttpParam());
+            }
         }
 
         return request;
@@ -223,13 +235,56 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
      */
     public static SendHttpUtilRequest buildPost(AbstractHttpRequest abstractHttpRequest,AbstractHttpParam abstractHttpParam
                                         ){
+        paramMap = abstractHttpParam.getParamMap();
 
-        SendHttpUtilRequest sendHttpUtilRequest = new SendHttpUtilRequest();
-        Map<String, Object> map;
+        if (paramMap.isEmpty()) return null;
 
-        List<Object> argList = new ArrayList<>();
+        map = buildMapName(paramMap, abstractHttpRequest.getPostMapName());
 
-        Map<String, String> paramMap = abstractHttpParam.getParamMap();
+        if (map.isEmpty()) return null;
+
+//        argList.add(map);
+
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Content-Type", abstractHttpRequest.getContentType());
+        headerMap.put("Cookie", abstractHttpRequest.getCookie());
+        headerMap.put("User-Agent", abstractHttpRequest.getUserAgent());
+        headerMap.put("X-Request-Protocol","dubbo");
+        headerMap.put("sc", abstractHttpRequest.getSc());
+
+
+//        Map<String, Object> bodyMap = new HashMap<>();
+//        bodyMap.put("app", abstractHttpRequest.getApp());
+//        bodyMap.put("env", abstractHttpRequest.getEnv());
+//        bodyMap.put("service", abstractHttpRequest.getService());
+//        bodyMap.put("method", abstractHttpRequest.getMethod());
+//        //增加参数变更
+////        bodyMap.put("args",argList);
+//
+//        bodyMap.put("sc", abstractHttpRequest.getSc());
+//        bodyMap.put("timeout", abstractHttpRequest.getTimeout());
+//        bodyMap.put("retries", abstractHttpRequest.getRetries());
+
+        sendHttpUtilRequest.setHeaderMap(headerMap);
+        sendHttpUtilRequest.setBodyMap(map);
+        sendHttpUtilRequest.setUrl(abstractHttpRequest.getUrl());
+        sendHttpUtilRequest.setIsRequest(abstractHttpRequest.getIsRequest());
+
+        return sendHttpUtilRequest;
+    }
+
+    /**
+     * *post参数转换
+     *      //有赞公司内部格式需要拿到pre的cook才行目前只能跑线上
+     * *   参数不需要放在链接上面
+     * *url  直接拿基础平台的
+     * @param abstractHttpRequest
+     * @param abstractHttpParam
+     * @return
+     */
+    public static SendHttpUtilRequest buildPostZan(AbstractHttpRequest abstractHttpRequest,AbstractHttpParam abstractHttpParam){
+
+        paramMap = abstractHttpParam.getParamMap();
 
         if (paramMap.isEmpty()) return null;
 

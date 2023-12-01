@@ -95,7 +95,7 @@ extends  AbstractHttpUtil{
         try {
             CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
 
-            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.UEL.getName(), true, getMapName, null,null);
+            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.UEL.getName(), true, getMapName, null,null,null);
 
             commonParam = buildAbstractHttpParam(new CommonParam(),paramMap);
 
@@ -119,13 +119,15 @@ extends  AbstractHttpUtil{
 
     /**
      * *POST请求(这个还需要测试下)
+     * *checkZanPost 这个字段为true的时候 url需要改变为公司的url格式
+     * *
      */
     public static void executePostCommon(){
 
         //执行
         //请求参数
         paramMap.put("roomTypeIds","[330]");
-        paramMap.put("saleProject","{\"advanceBookingDay\":0,\"breakfast\":22,\"buyLimitCycle\":0,\"buyLimitType\":0,\"buyLimitValue\":0,\"cancelRule\":0,\"continuousStayDay\":0,\"discountType\":0,\"hotelId\":0,\"id\":0,\"kdtId\":98126731,\"name\":\"ceshshsh1\",\"operator\":{\"adminId\":16473014943,\"kdtId\":98126731},\"originPrice\":10,\"pointRewardType\":0,\"roomStock\":2,\"roomTypeId\":0,\"saleDesc\":\"11\",\"saleVolume\":0,\"umpLevel\":[],\"umpRealLevel\":[],\"umpTags\":[],\"shopOrgId\":149385425}");
+        paramMap.put("saleProject","{\"advanceBookingDay\":0,\"breakfast\":22,\"buyLimitCycle\":0,\"buyLimitType\":0,\"buyLimitValue\":0,\"cancelRule\":0,\"continuousStayDay\":0,\"discountType\":0,\"hotelId\":0,\"id\":0,\"kdtId\":55,\"name\":\"HAHAHAH\",\"operator\":{\"adminId\":8226304108,\"kdtId\":55},\"originPrice\":10,\"pointRewardType\":0,\"roomStock\":2,\"roomTypeId\":0,\"saleDesc\":\"11\",\"saleVolume\":0,\"umpLevel\":[],\"umpRealLevel\":[],\"umpTags\":[],\"shopOrgId\":149385425}");
 
 
         postMapName.put("roomTypeIds",PostParamFormat.ARRAY_VALUE.getValue());
@@ -134,7 +136,8 @@ extends  AbstractHttpUtil{
         try {
             CommonHttpUtilServiceImpl instance = InitApplicationContextUtil.getInstance(CommonHttpUtilServiceImpl.class);
 
-            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.POST_UEL.getName(),false, null, null,postMapName);
+            commonContext = buildAbstractHttpRequest(new CommonContext(),CommonRequest.POST_UEL.getName(),false, null,
+                    null,postMapName,false);
 
             commonParam = buildAbstractHttpParam(new CommonParam(),paramMap);
 
