@@ -151,7 +151,8 @@ AbstractHttpService<K extends AbstractHttpRequest,V extends AbstractHttpParam,T 
             log.info("buildGetOrPost 失败参数有为空的 sendHttpContext:{}",sendHttpContext);
             return request;
         }
-        Boolean checkZanPost = sendHttpContext.getAbstractHttpRequest().getCheckZanPost();
+        Boolean checkZanPost = Optional.ofNullable(sendHttpContext.getAbstractHttpRequest()
+                .getCheckZanPost()).orElse(false);
 
         if (sendHttpContext.getAbstractHttpRequest().getIsRequest()){
             //这里get请求转换

@@ -15,10 +15,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -121,6 +118,7 @@ public class Test {
 //            System.err.println("k"+k);
 //        }
 
+        Long i = Optional.ofNullable(1L).orElse(null);
 
         System.err.println(15 % 1);
 

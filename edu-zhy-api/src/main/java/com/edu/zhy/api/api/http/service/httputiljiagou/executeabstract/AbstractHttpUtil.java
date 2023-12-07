@@ -23,8 +23,8 @@ public abstract class AbstractHttpUtil {
      * @return
      */
     public static  <T extends AbstractHttpRequest> T  buildAbstractHttpRequest(T request ,String url ,Boolean isRequest ,
-                                                                               List<String> getMapName, String args,Map<String,Integer> postMapName
-    ,Boolean checkZanPost){
+                                                                               List<String> getMapName, String args,
+                                                                               Map<String,Integer> postMapName,Boolean checkZanPost){
 
         request.setUrl(url);
         request.setIsRequest(isRequest);

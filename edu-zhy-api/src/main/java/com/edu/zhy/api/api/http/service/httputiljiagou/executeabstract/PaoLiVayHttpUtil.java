@@ -33,6 +33,18 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
 
     public static void main(String[] args) {
 
+        //只需要改下这里就好了
+        Boolean check = false;
+
+
+        if (check){
+            //get请求
+            executeGetPaoLiVay();
+        }else {
+            //post请求
+            executePostPaoLiVay();
+        }
+
     }
 
 
@@ -87,6 +99,10 @@ public class PaoLiVayHttpUtil extends AbstractHttpUtil{
 
     /**
      * * 请求保利威post请求
+     * *
+     *      * *POST请求(这个还需要测试下)
+     *      * *checkZanPost 这个字段为true的时候 url需要改变为公司的url格式
+     * * *
      */
     public static void executePostPaoLiVay(){
 
