@@ -52,6 +52,8 @@ public class PolyvHttpUtilServiceImpl extends AbstractHttpService<PolyvContext, 
         sendGetOrPost(buildGetOrPost(httpContext));
 
 
+//        InitApplicationContextUtil.closeClient();
+
 
     }
 

@@ -54,6 +54,8 @@ public class CommonHttpUtilServiceImpl extends AbstractHttpService<CommonContext
 
         sendGetOrPost(buildGetOrPost(context));
 
+//        InitApplicationContextUtil.closeClient();
+
     }
 
     @Override
