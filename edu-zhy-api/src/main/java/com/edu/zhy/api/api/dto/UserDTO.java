@@ -1,10 +1,14 @@
 package com.edu.zhy.api.api.dto;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @lombok.Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 
     @ExcelProperty("姓名")
@@ -15,7 +19,5 @@ public class UserDTO {
 
     @ExcelProperty("薪资")
     private Double salary;
-
-
 
 }

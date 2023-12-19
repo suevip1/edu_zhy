@@ -13,7 +13,9 @@ import org.junit.Test;
 import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +37,33 @@ public class TestV1 {
 //
 //        boolean b1 = checkActEndAt(end);
 //        System.err.println(b1);
+    }
+
+    @Test
+    public void m3(){
+        long startTime = System.currentTimeMillis();
+        long timeout = 10000; // 设置轮询超时时间为10秒
+
+        while (true) {
+            long currentTime = System.currentTimeMillis();
+
+            // 执行代码块
+            // ...
+            System.err.println(System.currentTimeMillis());
+
+            // 检查结束条件
+            if (currentTime - startTime >= timeout) {
+                break;
+            }
+
+            // 等待一段时间再进行下一次轮询
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 
@@ -111,6 +140,22 @@ public class TestV1 {
             System.err.println(taskType);
 
         }
+
+
+    }
+
+
+    @Test
+    public void m29(){
+        Integer integer = 0;
+        List<String> list = Arrays.asList("","");
+
+        integer = list.size();
+
+        System.err.println(integer);
+
+
+
 
 
     }

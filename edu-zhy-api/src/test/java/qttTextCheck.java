@@ -164,12 +164,12 @@ public class qttTextCheck {
 
         try {
             //帅选名称的标识
-            List<String> list = Arrays.asList("0fe74ikaq-TCkgdCYMbLqla8saR3ja7Q","0dec7i6sd-TCkgdCYMbLqla8saR3ja7Q","0fe74ikaq-TCkgdCYMbLqla8saR3ja7Q","0dec7i6sd-TCkgdCYMbLqla8saR3ja7Q");
+            List<String> list = Arrays.asList("0f86k5fib-Qv9kEL0YMG1CjD7b5xYtuQ","0celouad6-Qv9kEL0YMG1CjD7b5xYtuQ","0lgi0oolr-Qv9kEL0YMG1CjD7b5xYtuQ");
 
             List<String> titleList = new ArrayList<>();
             //全量文档
 //        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\logall.txt";
-            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\羊羊家电团-143182876\\羊羊家电团-143182876.json";
+            String logAllFilePath = "C:\\Users\\Admin\\Desktop\\qtt搬家\\好物集-150477611\\好物集-150477611.json";
             Integer i = 0;
 
 //            List<String> lines1 = readLinesFromFile(errorFilePath);

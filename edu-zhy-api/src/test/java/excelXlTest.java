@@ -21,9 +21,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class excelXlTest {
+    private static  List<Integer> Ids = Arrays.asList();
 
     //导入文件的路径
-    private static final String PATH = "C:\\Users\\Admin\\Downloads\\20231010190048a2291c65.xls";
+    private static final String PATH_XLS = "C:\\Users\\Admin\\Desktop\\plvy\\重制课件.xls";
+
+    private static final String PATH_XLSX = "C:\\Users\\Admin\\Downloads\\【有赞】重制课件文件vid20231215.xlsx";
 
     private static final String COPY_PATH = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\有赞小红书类目映射.xls";
 
@@ -39,9 +42,9 @@ public class excelXlTest {
 
     //每行的行数
 //    private static  final Integer LINE_NUMBER =14;
-    private static  final Integer LINE_NUMBER =1;
+    private static  final Integer LINE_NUMBER = 3;
 
-    private static List<String> pashList = Lists.newArrayList(PATH, PATHV1, PATHV2, PATHV2);
+    private static List<String> pashList = Lists.newArrayList(PATH_XLS, PATHV1, PATHV2, PATHV2);
 
     //数字限制
     private static final Integer NUM = 14;
@@ -98,9 +101,423 @@ public class excelXlTest {
             log.error("失败了 e:{}", e);
         }
 
+    }
+
+
+    @Test
+    public void paoLivReadExcelHotfix(){
+        List<String> list = new ArrayList<>();
+        try {
+            int i = 0;
+            String line;
+
+            String sourceFile = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\plvy.txt";
+
+            String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\plvyV2.txt";
+
+
+            File file1 = new File(sourceFile);
+
+            FileInputStream fis = new FileInputStream(file1);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+            while ((line = br.readLine()) != null) {
+                i++;
+                JSONObject jsonObject = JSON.parseObject(line);
+                String format = jsonObject.getString("format");
+
+                subLogList(format,list);
+
+            }
+
+            br.close();
+
+//            Set<String> collect = list.stream().collect(Collectors.toSet());
+//
+//            System.err.println(collect.size() + "::" + collect);
+
+
+            //这里是筛选数据
+            List<String> readLinesFromFile = readLinesFromFile(logAllFilePath);
+
+            Set<String> collect = readLinesFromFile.stream().filter(o -> !list.contains(o)).collect(Collectors.toSet());
+
+            System.err.println(collect.size() + "::" + collect);
+
+
+//            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+//            EasyExcel.write(FILE_NAME, hotfix.class).sheet("有赞报名表单提交数据").doWrite(list);
+        }catch (Exception e){
+            log.error("失败了 e:{}", e);
+        }
+    }
+
+
+    private static List<String> readLinesFromFile(String filePath) {
+        List<String> lines = new ArrayList<>();
+
+        // try-with-resources
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
+
+
+
+
+
+    @Test
+    public void readExcel() {
+
+        try {
+
+            List<ExcelKttOrderDTO> excelKttOrderDTOS = readExcelXls();
+
+            List<yzScrmExcelDTO> yzScrmExcelDTOS = data2(excelKttOrderDTOS);
+
+            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+            EasyExcel.write(FILE_NAME, yzScrmExcelDTO.class).sheet("有赞会员数据").doWrite(yzScrmExcelDTOS);
+
+        } catch (Exception e) {
+            log.error("失败了 e:{}", e);
+        }
+
+    }
+
+    @Test
+    public void paoLivRead() throws Exception {
+        List<Integer> convertSourceIds = new ArrayList<>();
+        Set<String> sourceIds = new HashSet<>();
+        List<String> list = Arrays.asList("3065856","3062316","3062315","3062312","3062307","2476172","2476168","2476141","2476131","2476128","2476074","2476026","2468838","2468754","2295950","2287889","2287875","2282192","2282189","2282185","2282181","2282174","2282171","2282167","2282164","2282159","2282157","2282153");
+
+        List<ExcelKttOrderDTO> excelKttOrderDTOS = readExcelXls();
+
+        excelKttOrderDTOS.remove(0);
+
+//        System.err.println(excelKttOrderDTOS.get(0));
+
+        //这里还需要一个转换把.0去掉
+         excelKttOrderDTOS.stream().filter(Objects::nonNull).forEach(kk -> {
+            if (Objects.nonNull(kk)
+                    && Objects.nonNull(kk.getPayOrderName())) {
+                convertSourceIds.add(Double.valueOf(kk.getPayOrderName()).intValue());
+            }
+        });
+
+        List<String> collect = convertSourceIds.stream().map(Objects::toString).collect(Collectors.toList());
+
+        collect.stream()
+                .filter(Objects::nonNull)
+                .filter(o -> {
+                    if (list.contains(o)){
+                        return false;
+                    }
+                    return true;
+                })
+                .forEach(k -> {
+                    if (Objects.nonNull(k)){
+                        sourceIds.add(k);
+                    }
+                });
+
+
+        System.err.println("长度:"+ sourceIds.size() +","+"总数据:"+sourceIds);
+    }
+
+
+
+
+
+
+
+    /**
+     * *读取本地文件
+     *
+     * @throws Exception  不能用
+     */
+    public List<String> readExcelXlsV1() throws Exception {
+        //获取每列第一行的下标
+        Integer num = 1;
+
+        List<String> list = new ArrayList<>();
+
+        //根据文件位置找到需要读取的excel文件
+        File file = new File(COPY_PATH);
+
+        //根据路径生成 FileInputStream字节流
+        FileInputStream fileInputStream = new FileInputStream(file);
+
+        //将FileInputStream转换为Workbook
+        Workbook workbook = Workbook.getWorkbook(fileInputStream);
+
+        // 默认获取第一张工作表，可以自定义
+        Sheet sheet = workbook.getSheet(0);
+
+        // 循环获取每一行数据 因为默认第一行为标题行，我们可以从 1 开始循环，如果没有标题行，i从 0 开始
+        // sheet.getRows() 获取总行数
+        for (int i = 1; i < sheet.getRows(); i++) {
+            num++;
+            // 获取第一列的第 i 行信息 sheet.getCell(列，行)，下标从0开始
+            String content = sheet.getCell(num, i).getContents();
+//            // 获取第二列的第 i 行信息
+//            String content2 = sheet.getCell(1,i).getContents();
+            list.add(content);
+            //后面根据需要以此类推
+        }
+
+        return list;
+    }
+
+    //这里需要一个转换接口
+
+    //可以用
+    public List<ExcelKttOrderDTO> readExcelXls() throws Exception {
+        Integer num = 0;
+
+        List<ExcelKttOrderDTO> listArrayList = new ArrayList<>();
+
+        List<String> list = new ArrayList<>();
+        try {
+            //创建工作簿对象
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream(PATH_XLS));
+            //获取工作簿下sheet的个数
+            int sheetNum = xssfWorkbook.getNumberOfSheets();
+//            System.out.println("该excel文件中总共有：" + sheetNum + "个sheet");
+            //遍历工作簿中的所有数据
+            for (int i = 0; i < sheetNum; i++) {
+                //只读第一张表
+                if (i >= 1) break;
+                //读取第i个工作表
+//                System.out.println("读取第" + (i + 1) + "个sheet");
+                XSSFSheet sheet = xssfWorkbook.getSheetAt(i);
+                //获取最后一行的num，即总行数。此处从0开始
+                int maxRow = sheet.getLastRowNum();
+                for (int row = 0; row <= maxRow; row++) {
+                    //获取最后单元格num，即总单元格数 ***注意：此处从1开始计数***
+                    int maxRol = sheet.getRow(row).getLastCellNum();
+//                    System.out.println("--------第" + row + "行的数据如下--------");
+                    for (int rol = 0; rol < maxRol; rol++) {
+//                        System.out.print(sheet.getRow(row).getCell(rol) + "  ");
+//                        XSSFCell cell = sheet.getRow(row).getCell(rol);
+//                        System.err.println(cell);
+                        num++;
+
+                        list.add(String.valueOf(sheet.getRow(row).getCell(rol)));
+                        if (num % LINE_NUMBER == 0){
+                         //这里转换 需要把list数据循环赋值转成dto
+                            listArrayList.add(data(list));
+                            list.clear();
+                        }
+
+                    }
+
+//                    System.out.println();
+                }
+            }
+
+
+            return listArrayList;
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("失败了哈啊哈哈哈哈哈 E:{}",e);
+            return new ArrayList<>();
+        }
+
+    }
+
+
+    //低级的数据取值
+    private ExcelKttOrderDTO data(List<String> list){
+//        System.err.println("长度:"+list.size()+"数据data:"+ JSON.toJSON(list));
+        ExcelKttOrderDTO excelKttOrderDTO = new ExcelKttOrderDTO();
+        excelKttOrderDTO.setPackageNumber(list.get(0));
+        excelKttOrderDTO.setPayOrderName(list.get(1));
+        excelKttOrderDTO.setPayDate(list.get(2));
+//        excelKttOrderDTO.setProduct(list.get(5));
+//        excelKttOrderDTO.setPayPrice(list.get(6));
+//        excelKttOrderDTO.setRefundPrice(list.get(7));
+//        excelKttOrderDTO.setStatus(list.get(8));
+//        excelKttOrderDTO.setConsignee(list.get(10));
+//        excelKttOrderDTO.setPhone(list.get(11));
+//        excelKttOrderDTO.setDetailedAddress(list.get(12));
+
+        return excelKttOrderDTO;
+    }
+
+
+
+    //数据转换处理
+    private List<yzScrmExcelDTO> data2(List<ExcelKttOrderDTO> excelKttOrderDTOS){
+        List<yzScrmExcelDTO> list = excelKttOrderDTOS.stream().filter(Objects::nonNull).map(o -> {
+            yzScrmExcelDTO yzScrmExcelDTO = new yzScrmExcelDTO();
+            yzScrmExcelDTO.setPhone(o.getPhone());
+            yzScrmExcelDTO.setName(o.getPayOrderName());
+
+            return yzScrmExcelDTO;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        return list;
+    }
+
+
+
+    //数据转换处理
+    private List<yzScrmExcelDTO> data3(List<ExcelKttOrderDTO> excelKttOrderDTOS){
+        List<yzScrmExcelDTO> list = excelKttOrderDTOS.stream().filter(Objects::nonNull).map(o -> {
+            yzScrmExcelDTO yzScrmExcelDTO = new yzScrmExcelDTO();
+            yzScrmExcelDTO.setPhone(o.getPhone());
+            yzScrmExcelDTO.setName(o.getPayOrderName());
+            //省
+            yzScrmExcelDTO.setProvince(getSubstringData(o.getDetailedAddress(),AddressTypeEnum.PROVINCE.getType()));
+
+            //市
+            yzScrmExcelDTO.setTheCity(getSubstringData(o.getDetailedAddress(),AddressTypeEnum.TEAMCITY.getType()));
+
+            //区/县
+            yzScrmExcelDTO.setAreaCounty(getSubstringData(o.getDetailedAddress(),AddressTypeEnum.ACCOUNT.getType()));
+
+            return yzScrmExcelDTO;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        return list;
+    }
+
+
+    /**
+     * *截取省/市/区,县
+     * @param data 数据
+     * @param type 类型    AddressTypeEnum
+     * @return 获取值
+     */
+    private static String getSubstringData(String data, Integer type){
+        AddressTypeEnum value = AddressTypeEnum.getByValue(type);
+        switch (value){
+            case PROVINCE:
+
+                return getSubstring(data,AddressTypeEnum.PROVINCE.getContent(),null);
+
+            case TEAMCITY:
+
+                return getSubstring(data,AddressTypeEnum.TEAMCITY.getContent(),AddressTypeEnum.PROVINCE.getContent());
+
+            case ACCOUNT:
+
+                return getSubstring(data,null,AddressTypeEnum.TEAMCITY.getContent());
+            default:
+                return null;
+        }
+
+    }
+
+
+    /**
+     * *
+     * @param data
+     * @param beforeValue 要去除的本值
+     * @param afterValue 要去除的前置/后置值
+     * @return
+     */
+    private static String getSubstring(String data, String beforeValue, String afterValue){
+        //第一次
+        if (Objects.isNull(afterValue)){
+            int indexOf = data.lastIndexOf(beforeValue);
+
+            return data.substring(0, indexOf+1);
+        }
+
+
+        if (Objects.isNull(beforeValue)){
+            int indexOf = data.lastIndexOf(afterValue);
+            return data.substring(indexOf+1);
+        }
+
+
+        //要把前面的截掉
+        int indexOf = data.lastIndexOf(beforeValue);
+        int indexOf1 = data.lastIndexOf(afterValue);
+
+        return data.substring(indexOf1+1, indexOf+1);
+
+    }
+
+
+
+    //数据
+    private List<UserDTO> data(){
+        List<UserDTO> list = new ArrayList<>();
+
+        //算上标题，做多可写65536行
+        //超出：java.lang.IllegalArgumentException: Invalid row number (65536) outside allowable range (0..65535)
+        for (int i = 0; i < 65535; i++) {
+            UserDTO data = new UserDTO();
+            data.setName("Helen" + i);
+            list.add(data);
+        }
+
+        return list;
+    }
+
+
+    //1:最简单的写入方法  xlsx 版本的Excel最多一次可写0...1048575行
+    public void simpleWriteXlsx() {
+        String fileName = "d:/excel/simpleWrite.xlsx"; //需要提前新建目录
+        // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+        EasyExcel.write(fileName, UserDTO.class).sheet("模板").doWrite(data());
+    }
+
+    //第二次写入方法   xls 版本的Excel最多一次可写0 ...65535行
+    public void simpleWriteXls() {
+        String fileName = "d:/excel/simpleWrite.xls";
+        // 如果这里想使用03 则 传入excelType参数即可
+        EasyExcel.write(fileName, UserDTO.class).excelType(ExcelTypeEnum.XLS).sheet("模板").doWrite(data());
+    }
+
+
+    /**
+     * 截取天网日志
+     * */
+    public void subLogList(String format,List<String> list){
+
+        String s = subBeforePushStream(format);
+
+        String s1 = subAfterStreamKeyUrl(s);
+
+        int indexOf = s1.indexOf(":", 0);
+
+        String substring = s1.substring(indexOf + 1);
+
+//        int indexOf1 = s1.indexOf(",", 0);
+//
+//        String s3 = Optional.ofNullable(s1.substring(indexOf1+1)).orElse(null);
+//
+//        int indexOf2 = s3.lastIndexOf("]");
+//
+//        String s4 = Optional.ofNullable(s3.substring(0,indexOf2)).orElse(null);
+
+        JSONArray jsonArray = JSON.parseArray(substring);
+
+        for (Integer v = 0;v < jsonArray.size();v++){
+            JSONObject imageTextVo = jsonArray.getJSONObject(v);
+
+            Object channelId = imageTextVo.get("channelId");
+
+            if (Objects.nonNull(channelId)){
+                list.add(String.valueOf(channelId));
+            }
+
+        }
 
 
     }
+
+
 
     /**
      * *解析数据收拢到list里面
@@ -230,272 +647,6 @@ public class excelXlTest {
     }
 
 
-
-    @Test
-    public void m2() {
-
-        try {
-//            //先读取excel的数据
-//            List<String> list = readExcelXls();
-
-
-            List<ExcelKttOrderDTO> excelKttOrderDTOS = readExcelXlsx();
-
-//            List<String> collect = excelKttOrderDTOS.stream().filter(Objects::nonNull).map(ExcelKttOrderDTO::getPackageNumber).collect(Collectors.toList());
-//            System.err.println(JSON.toJSONString(collect));
-            List<yzScrmExcelDTO> yzScrmExcelDTOS = data2(excelKttOrderDTOS);
-
-            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
-            EasyExcel.write(FILE_NAME, yzScrmExcelDTO.class).sheet("有赞会员数据").doWrite(yzScrmExcelDTOS);
-
-//
-//            try (FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME)) {
-//                workbook.write(fileOutputStream);
-//
-//            }
-
-
-        } catch (Exception e) {
-            log.error("失败了 e:{}", e);
-        }
-
-
-//        筛选匹配数据（这里应该需要加接口查询）这步先不要，目前只做转换数据
-
-
-//        生成excel写入本地
-
-
-    }
-
-
-    /**
-     * *读取本地文件
-     *
-     * @throws Exception  不能用
-     */
-    public List<String> readExcelXls() throws Exception {
-        //获取每列第一行的下标
-        Integer num = 1;
-
-        List<String> list = new ArrayList<>();
-
-        //根据文件位置找到需要读取的excel文件
-        File file = new File(COPY_PATH);
-
-        //根据路径生成 FileInputStream字节流
-        FileInputStream fileInputStream = new FileInputStream(file);
-
-        //将FileInputStream转换为Workbook
-        Workbook workbook = Workbook.getWorkbook(fileInputStream);
-
-        // 默认获取第一张工作表，可以自定义
-        Sheet sheet = workbook.getSheet(0);
-
-        // 循环获取每一行数据 因为默认第一行为标题行，我们可以从 1 开始循环，如果没有标题行，i从 0 开始
-        // sheet.getRows() 获取总行数
-        for (int i = 1; i < sheet.getRows(); i++) {
-            num++;
-            // 获取第一列的第 i 行信息 sheet.getCell(列，行)，下标从0开始
-            String content = sheet.getCell(num, i).getContents();
-//            // 获取第二列的第 i 行信息
-//            String content2 = sheet.getCell(1,i).getContents();
-            list.add(content);
-            //后面根据需要以此类推
-        }
-
-        return list;
-    }
-
-    //这里需要一个转换接口
-
-    //可以用
-    public List<ExcelKttOrderDTO> readExcelXlsx() throws Exception {
-        Integer num = 0;
-
-        List<ExcelKttOrderDTO> listArrayList = new ArrayList<>();
-
-        List<String> list = new ArrayList<>();
-        try {
-            //创建工作簿对象
-            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream(PATH));
-            //获取工作簿下sheet的个数
-            int sheetNum = xssfWorkbook.getNumberOfSheets();
-//            System.out.println("该excel文件中总共有：" + sheetNum + "个sheet");
-            //遍历工作簿中的所有数据
-            for (int i = 0; i < sheetNum; i++) {
-                //只读第一张表
-                if (i >= 1) break;
-                //读取第i个工作表
-//                System.out.println("读取第" + (i + 1) + "个sheet");
-                XSSFSheet sheet = xssfWorkbook.getSheetAt(i);
-                //获取最后一行的num，即总行数。此处从0开始
-                int maxRow = sheet.getLastRowNum();
-                for (int row = 0; row <= maxRow; row++) {
-                    //获取最后单元格num，即总单元格数 ***注意：此处从1开始计数***
-                    int maxRol = sheet.getRow(row).getLastCellNum();
-//                    System.out.println("--------第" + row + "行的数据如下--------");
-                    for (int rol = 0; rol < maxRol; rol++) {
-//                        System.out.print(sheet.getRow(row).getCell(rol) + "  ");
-//                        XSSFCell cell = sheet.getRow(row).getCell(rol);
-//                        System.err.println(cell);
-                        num++;
-
-                        list.add(String.valueOf(sheet.getRow(row).getCell(rol)));
-                        if (num % LINE_NUMBER == 0){
-                         //这里转换 需要把list数据循环赋值转成dto
-                            listArrayList.add(data(list));
-                            list.clear();
-                        }
-
-                    }
-
-//                    System.out.println();
-                }
-            }
-
-
-            return listArrayList;
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.error("失败了哈啊哈哈哈哈哈 E:{}",e);
-            return new ArrayList<>();
-        }
-
-    }
-
-
-    //低级的数据取值
-    private ExcelKttOrderDTO data(List<String> list){
-//        System.err.println("长度:"+list.size()+"数据data:"+ JSON.toJSON(list));
-        ExcelKttOrderDTO excelKttOrderDTO = new ExcelKttOrderDTO();
-        excelKttOrderDTO.setPackageNumber(list.get(0));
-//        excelKttOrderDTO.setPayOrderName(list.get(1));
-//        excelKttOrderDTO.setPayDate(list.get(3));
-//        excelKttOrderDTO.setProduct(list.get(5));
-//        excelKttOrderDTO.setPayPrice(list.get(6));
-//        excelKttOrderDTO.setRefundPrice(list.get(7));
-//        excelKttOrderDTO.setStatus(list.get(8));
-//        excelKttOrderDTO.setConsignee(list.get(10));
-//        excelKttOrderDTO.setPhone(list.get(11));
-//        excelKttOrderDTO.setDetailedAddress(list.get(12));
-
-        return excelKttOrderDTO;
-    }
-
-
-
-    //数据转换处理
-    private List<yzScrmExcelDTO> data2(List<ExcelKttOrderDTO> excelKttOrderDTOS){
-        List<yzScrmExcelDTO> list = excelKttOrderDTOS.stream().filter(Objects::nonNull).map(o -> {
-            yzScrmExcelDTO yzScrmExcelDTO = new yzScrmExcelDTO();
-            yzScrmExcelDTO.setPhone(o.getPhone());
-            yzScrmExcelDTO.setName(o.getPayOrderName());
-            //省
-            yzScrmExcelDTO.setProvince(getSubstringData(o.getDetailedAddress(),AddressTypeEnum.PROVINCE.getType()));
-
-            //市
-            yzScrmExcelDTO.setTheCity(getSubstringData(o.getDetailedAddress(),AddressTypeEnum.TEAMCITY.getType()));
-
-            //区/县
-            yzScrmExcelDTO.setAreaCounty(getSubstringData(o.getDetailedAddress(),AddressTypeEnum.ACCOUNT.getType()));
-
-            return yzScrmExcelDTO;
-        }).filter(Objects::nonNull).collect(Collectors.toList());
-
-        return list;
-    }
-
-
-
-    /**
-     * *截取省/市/区,县
-     * @param data 数据
-     * @param type 类型    AddressTypeEnum
-     * @return 获取值
-     */
-    private static String getSubstringData(String data, Integer type){
-        AddressTypeEnum value = AddressTypeEnum.getByValue(type);
-        switch (value){
-            case PROVINCE:
-
-                return getSubstring(data,AddressTypeEnum.PROVINCE.getContent(),null);
-
-            case TEAMCITY:
-
-                return getSubstring(data,AddressTypeEnum.TEAMCITY.getContent(),AddressTypeEnum.PROVINCE.getContent());
-
-            case ACCOUNT:
-
-                return getSubstring(data,null,AddressTypeEnum.TEAMCITY.getContent());
-            default:
-                return null;
-        }
-
-    }
-
-
-    /**
-     * *
-     * @param data
-     * @param beforeValue 要去除的本值
-     * @param afterValue 要去除的前置/后置值
-     * @return
-     */
-    private static String getSubstring(String data, String beforeValue, String afterValue){
-        //第一次
-        if (Objects.isNull(afterValue)){
-            int indexOf = data.lastIndexOf(beforeValue);
-
-            return data.substring(0, indexOf+1);
-        }
-
-
-        if (Objects.isNull(beforeValue)){
-            int indexOf = data.lastIndexOf(afterValue);
-            return data.substring(indexOf+1);
-        }
-
-
-        //要把前面的截掉
-        int indexOf = data.lastIndexOf(beforeValue);
-        int indexOf1 = data.lastIndexOf(afterValue);
-
-        return data.substring(indexOf1+1, indexOf+1);
-
-    }
-
-
-
-    //数据
-    private List<UserDTO> data(){
-        List<UserDTO> list = new ArrayList<>();
-
-        //算上标题，做多可写65536行
-        //超出：java.lang.IllegalArgumentException: Invalid row number (65536) outside allowable range (0..65535)
-        for (int i = 0; i < 65535; i++) {
-            UserDTO data = new UserDTO();
-            data.setName("Helen" + i);
-            list.add(data);
-        }
-
-        return list;
-    }
-
-
-    //1:最简单的写入方法  xlsx 版本的Excel最多一次可写0...1048575行
-    public void simpleWriteXlsx() {
-        String fileName = "d:/excel/simpleWrite.xlsx"; //需要提前新建目录
-        // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
-        EasyExcel.write(fileName, UserDTO.class).sheet("模板").doWrite(data());
-    }
-
-    //第二次写入方法   xls 版本的Excel最多一次可写0 ...65535行
-    public void simpleWriteXls() {
-        String fileName = "d:/excel/simpleWrite.xls";
-        // 如果这里想使用03 则 传入excelType参数即可
-        EasyExcel.write(fileName, UserDTO.class).excelType(ExcelTypeEnum.XLS).sheet("模板").doWrite(data());
-    }
 
 
 
