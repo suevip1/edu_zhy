@@ -1,4 +1,5 @@
 import com.alibaba.fastjson.JSON;
+import com.edu.zhy.api.api.http.okhttp.OKHttpUtils;
 import com.edu.zhy.api.api.visibility.SwitchCacheKey;
 import com.edu.zhy.api.api.visibility.VisibilityConfigDTO;
 import com.edu.zhy.api.api.web.dto.DelayTaskMessage;
@@ -6,16 +7,20 @@ import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
 import javax.annotation.PostConstruct;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
+import java.util.Enumeration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +31,20 @@ public class TestV1 {
 
 
     private static long ONE_MINUTES = 1 * 60 * 1000L;
+
+
+
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT);
+
+
+    static final String[] PATTERNS = new String[]{
+            DEFAULT_DATE_FORMAT
+    };
+
+
+    private static MediaType multiPartType = MediaType.parse("application/octet-stream");
 
     @Test
     public void zhyV1(){
@@ -144,21 +163,100 @@ public class TestV1 {
 
     }
 
+    private static String getIp() {
+        try {
+            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+            InetAddress ip;
+            while (allNetInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = allNetInterfaces.nextElement();
+                if (netInterface.isLoopback() || netInterface.isVirtual() || !netInterface.isUp()) {
+                    continue;
+                } else {
+                    Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                    while (addresses.hasMoreElements()) {
+                        ip = addresses.nextElement();
+                        if (ip != null && ip instanceof Inet4Address) {
+                            return ip.getHostAddress();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+        return "127.0.0.1";
+    }
 
-    @Test
-    public void m29(){
-        Integer integer = 0;
-        List<String> list = Arrays.asList("","");
-
-        integer = list.size();
-
-        System.err.println(integer);
 
 
+    public static void main(String[] args) {
 
+//        byte[] fileContent = new byte[6];
+//        String fileName = "hahaha";
+//        String token = "pNRZT0KqE-4QuBa6MxYRg-Uc-FTJ8vw_TDVMOYK0:ClRy7HP-O23oWqSJPg5X3C1gp9o=:eyJzYXZlS2V5IjoidXBsb2FkX2ZpbGVzLyQoYnVja2V0KS8kKHllYXIpLyQobW9uKS8kKGRheSkvJChldGFnKSQoZXh0KSIsInNjb3BlIjoieXotdGVzdC1maWxlIiwiY2FsbGJhY2tVcmwiOiJodHRwczovL21hdGVyaWFscy1xYS55b3V6YW4uY29tL2NhbGxiYWNrL3N0b3JhZ2VxaW5pdWZpbGUuanNvbiIsImZzaXplTGltaXQiOjUyNDI4ODAwLCJmc2l6ZU1pbiI6MSwiZGVhZGxpbmUiOjE3MDQyMDQyNTQsImNhbGxiYWNrQm9keSI6ImF2SW5mb1x1MDAzZCQoYXZpbmZvKVx1MDAyNmtkdElkXHUwMDNkMFx1MDAyNmJ1Y2tldElkXHUwMDNkM1x1MDAyNm1lZGlhVHlwZVx1MDAzZDVcdTAwMjZpbWFnZUluZm9cdTAwM2QkKGltYWdlSW5mbylcdTAwMjZtaW1lVHlwZVx1MDAzZCQobWltZVR5cGUpXHUwMDI2c2l6ZVx1MDAzZCQoZnNpemUpXHUwMDI2c291cmNlVHlwZVx1MDAzZDBcdTAwMjZ1cGxvYWRDaGFubmVsXHUwMDNkb3dsX3NjaGVkdWxlX2pvYlx1MDAyNm5hbWVcdTAwM2QkKGZuYW1lKVx1MDAyNmlzUHVibGljXHUwMDNkMVx1MDAyNmNvbW1vbi1vcGVyYXRvclx1MDAzZDB8M1x1MDAyNmF0dGFjaG1lbnRQYXRoXHUwMDNkJChrZXkpIn0=";
+//
+//        uploadFile(fileName,token,fileContent);
+
+        String ip = getIp();
+
+        System.err.println(ip);
 
 
     }
+
+    @Test
+    public void m29(){
+//      byte[] fileContent = new byte[6];
+//      String fileName = "hahaha";
+//      String token = "pNRZT0KqE-4QuBa6MxYRg-Uc-FTJ8vw_TDVMOYK0:ClRy7HP-O23oWqSJPg5X3C1gp9o=:eyJzYXZlS2V5IjoidXBsb2FkX2ZpbGVzLyQoYnVja2V0KS8kKHllYXIpLyQobW9uKS8kKGRheSkvJChldGFnKSQoZXh0KSIsInNjb3BlIjoieXotdGVzdC1maWxlIiwiY2FsbGJhY2tVcmwiOiJodHRwczovL21hdGVyaWFscy1xYS55b3V6YW4uY29tL2NhbGxiYWNrL3N0b3JhZ2VxaW5pdWZpbGUuanNvbiIsImZzaXplTGltaXQiOjUyNDI4ODAwLCJmc2l6ZU1pbiI6MSwiZGVhZGxpbmUiOjE3MDQyMDQyNTQsImNhbGxiYWNrQm9keSI6ImF2SW5mb1x1MDAzZCQoYXZpbmZvKVx1MDAyNmtkdElkXHUwMDNkMFx1MDAyNmJ1Y2tldElkXHUwMDNkM1x1MDAyNm1lZGlhVHlwZVx1MDAzZDVcdTAwMjZpbWFnZUluZm9cdTAwM2QkKGltYWdlSW5mbylcdTAwMjZtaW1lVHlwZVx1MDAzZCQobWltZVR5cGUpXHUwMDI2c2l6ZVx1MDAzZCQoZnNpemUpXHUwMDI2c291cmNlVHlwZVx1MDAzZDBcdTAwMjZ1cGxvYWRDaGFubmVsXHUwMDNkb3dsX3NjaGVkdWxlX2pvYlx1MDAyNm5hbWVcdTAwM2QkKGZuYW1lKVx1MDAyNmlzUHVibGljXHUwMDNkMVx1MDAyNmNvbW1vbi1vcGVyYXRvclx1MDAzZDB8M1x1MDAyNmF0dGFjaG1lbnRQYXRoXHUwMDNkJChrZXkpIn0=";
+//
+//      uploadFile(fileName,token,fileContent);
+
+
+        Long gg = 0L;
+
+        if (Objects.equals(gg,0)){
+            System.err.println(gg);
+        }
+
+
+    }
+
+    public static void uploadFile(String fileName, String token, byte[] bytes) {
+
+        String fileUrl = "";
+        try {
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+
+            RequestBody fileBody = RequestBody.create(multiPartType, bytes);
+
+            RequestBody requestBody = builder.setType(MultipartBody.FORM)
+                    .addFormDataPart("token", token)
+                    .addFormDataPart("file", fileName, fileBody)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .post(requestBody)
+                    .url("http://proxy-qa.s.qima-inc.com")
+                    .header("Scheme", "https")
+                    .header("Host", "upload.qbox.me")
+                    .build();
+
+
+//
+            OkHttpClient okHttpClient = OKHttpUtils.getOkHttpClient();
+
+            Response execute = okHttpClient.newCall(request).execute();
+            System.err.println(execute);
+
+
+
+        } catch (Exception e) {
+        }
+
+    }
+
+
+
 
 
     private long getExecuteTime() {

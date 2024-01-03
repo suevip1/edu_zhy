@@ -39,7 +39,8 @@ public class OKHttpUtils {
 
     private static final MediaType form = MediaType.parse("application/x-www-form-urlencoded");
 
-    private OkHttpClient mOkHttpClient;
+
+    private static  OkHttpClient OkHttpClient;
 
 
     public OKHttpUtils(OkHttpClient okHttpClient) {
@@ -99,7 +100,7 @@ public class OKHttpUtils {
                 }
             };
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            mOkHttpClient = builder
+            okHttpClient = builder
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
@@ -111,7 +112,7 @@ public class OKHttpUtils {
 //                    .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy-qa.s.qima-inc.com", 80)))
                     .build();
         } else {
-            mOkHttpClient = okHttpClient;
+            okHttpClient = okHttpClient;
         }
     }
 
@@ -130,8 +131,8 @@ public class OKHttpUtils {
         return initClient(null);
     }
 
-    public OkHttpClient getOkHttpClient() {
-        return mOkHttpClient;
+    public static OkHttpClient getOkHttpClient() {
+        return OkHttpClient;
     }
 
     /**
@@ -174,7 +175,7 @@ public class OKHttpUtils {
         long startTime = System.currentTimeMillis();
         Response response = null;
         try {
-            response = mOkHttpClient.newCall(requestBuilder.build()).execute();
+            response = OkHttpClient.newCall(requestBuilder.build()).execute();
         } catch (IOException e) {
             LOGGER.error("action=sendGet, send get http request occur exception", e);
         }
@@ -197,7 +198,7 @@ public class OKHttpUtils {
         long startTime = System.currentTimeMillis();
         Response response = null;
         try {
-            response = mOkHttpClient.newCall(requestBuilder.build()).execute();
+            response = OkHttpClient.newCall(requestBuilder.build()).execute();
         } catch (IOException e) {
             LOGGER.error("action=sendGet, send get http request occur exception", e);
         }
@@ -218,7 +219,7 @@ public class OKHttpUtils {
         }
         Response response = null;
         try {
-            response = mOkHttpClient.newCall(requestBuilder.build()).execute();
+            response = OkHttpClient.newCall(requestBuilder.build()).execute();
         } catch (IOException e) {
             LOGGER.error("action=sendPost, send post http request occur exception", e);
         }
@@ -238,7 +239,7 @@ public class OKHttpUtils {
         }
         Response response = null;
         try {
-            response = mOkHttpClient.newCall(requestBuilder.build()).execute();
+            response = OkHttpClient.newCall(requestBuilder.build()).execute();
         } catch (IOException e) {
             LOGGER.error("action=sendFormPost, send post http request occur exception", e);
         }
