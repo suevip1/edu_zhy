@@ -1,0 +1,1 @@
+{“requestBody”:{“bucket”:"$(bucket)",“persistentId”:"$(persistentId)",“fname”:"$(fname)",“avInfo”:"$(avInfo)",“key”:"$(path)",“mimeType”:"$(mimeType)",“size”:"$(fsize)",“ext”:"$(ext)"},"headers":{"Authorization":"$(x:)"}}

@@ -79,6 +79,14 @@ public class yzScrmExcelDTO {
     private String shoppingGuidePhone;
 
 
+    /**
+     * 领券时,指定面额, 单位为分
+     */
+    private Long assignValue;
+    /**
+     * 随机券面额范围（单位：分）
+     */
+    private Long valueRandomTo;
 
 
 

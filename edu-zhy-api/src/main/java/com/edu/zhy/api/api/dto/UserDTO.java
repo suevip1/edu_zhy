@@ -20,4 +20,14 @@ public class UserDTO {
     @ExcelProperty("薪资")
     private Double salary;
 
+
+    /**
+     * 领券时,指定面额, 单位为分
+     */
+    private Long assignValue;
+    /**
+     * 随机券面额范围（单位：分）
+     */
+    private Long valueRandomTo;
+
 }

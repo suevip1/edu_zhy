@@ -1,3 +1,5 @@
+import com.edu.zhy.api.api.dto.UserDTO;
+import com.edu.zhy.api.api.dto.yzScrmExcelDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -5,9 +7,8 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,16 +47,79 @@ public class TestV2 {
 
     }
 
+    @Test
+    public void paoLiVayShopClose() {
+        String logAllFilePath = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\shoplive.txt";
+
+        List<String> lines2 = readLinesFromFile(logAllFilePath);
+
+        Set<String> hashSet = new HashSet<>(lines2);
+
+        System.err.println(hashSet.size());
+
+    }
+
+
+    @Test
+    public void urlSub(){
+        String url = "https://oss-live-2.videocc.net/record/record/recordf/c1b311d4091629886294948c644";
+        String sub = "oss-live-2.videocc.net";
+
+        boolean contains = url.contains(sub);
+        System.err.println(contains);
+
+
+    }
+
+
+
 
     @Test
     public void userName(){
 
-        String ss = desensitize("155189890ss");
+//        String ss = desensitize("155189890ss");
+//
+//        String s = desensitizeForCustomer(ss);
+//
+//        System.err.println(s);
 
-        String s = desensitizeForCustomer(ss);
+        //        int randomValue = random.nextInt((int) (valueRandomTo - assignValue));
+//        System.err.println(randomValue);
+//
+//        long l = assignValue + randomValue;
+//        System.err.println(l);
 
-        System.err.println(s);
+        Long valueRandomTo = 1000L;
+        Long assignValue = 516L;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setAssignValue(assignValue);
+        userDTO.setValueRandomTo(valueRandomTo);
+        yzScrmExcelDTO tyzScrmExcelDTO = getTyzScrmExcelDTO(userDTO);
+        Random random = new Random(System.currentTimeMillis());
 
+
+        CompletableFuture<Integer>[] futures = new CompletableFuture[1];
+        for (int i = 0; i < 1; i++) {
+            if (valueRandomTo > 0) {
+                int randomValue = random.nextInt((int) (valueRandomTo - assignValue));
+                userDTO.setAssignValue(assignValue + randomValue);
+            }
+            futures[i] = CompletableFuture.supplyAsync(() -> checkUser(tyzScrmExcelDTO));
+        }
+        CompletableFuture.allOf(futures).join();
+
+    }
+
+    private Integer checkUser(yzScrmExcelDTO yy){
+        System.err.println(yy);
+        return 1;
+    }
+
+    private yzScrmExcelDTO getTyzScrmExcelDTO(UserDTO userDTO) {
+        yzScrmExcelDTO yy = new yzScrmExcelDTO();
+        yy.setAssignValue(userDTO.getAssignValue());
+        yy.setValueRandomTo(userDTO.getValueRandomTo());
+        return yy;
     }
 
     /**

@@ -4,18 +4,24 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.edu.zhy.api.api.dto.*;
-import com.edu.zhy.api.api.service.impl.zhyService;
+import com.edu.zhy.biz.dubboBean.businessException.BusinessException;
 import com.google.common.collect.Lists;
 import jxl.Sheet;
 import jxl.Workbook;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
-import javax.annotation.Resource;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,7 +30,7 @@ public class excelXlTest {
     private static  List<Integer> Ids = Arrays.asList();
 
     //导入文件的路径
-    private static final String PATH_XLS = "C:\\Users\\Admin\\Desktop\\plvy\\重制课件.xls";
+    private static final String PATH_XLS = "C:\\Users\\Admin\\Desktop\\文件\\plvy\\【有赞】重制课件文件vid20231215.xlsx";
 
     private static final String PATH_XLSX = "C:\\Users\\Admin\\Downloads\\【有赞】重制课件文件vid20231215.xlsx";
 
@@ -37,7 +43,7 @@ public class excelXlTest {
 
 
     //需要提前新建目录  写入的文件名称
-    private static final String FILE_NAME = "C:\\Users\\Admin\\Desktop\\excel\\9-20导出.xlsx";
+    private static final String FILE_NAME = "C:\\Users\\Admin\\Desktop\\文件\\excel\\保利威要下载的实际的 v2版本.xlsx";
 
 
     //每行的行数
@@ -52,9 +58,181 @@ public class excelXlTest {
     private static List<String> newArrayListist = Lists.newArrayList("跟团号"
             , "下单人", "支付时间", "商品", "订单金额", "订单退款", "订单状态", "收货人", "联系电话", "详细地址");
 
+    /**
+     * 读取三方excel数据筛选数据
+     */
+    @Test
+    public void videoYouZan() {
+        List<VideoHotfixDTO> videoUrlList = new ArrayList<>();
+        List<VideoHotfixDTO> videoHotfixDTOList = new ArrayList<>();
+        String plUrl = "C:\\Users\\Admin\\Documents\\WeChat Files\\wxid_4egrh9j2kcc522\\FileStorage\\File\\2024-08\\youzan.xlsx";
+        String liveUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\有赞channel.xlsx";
+        String videoUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\保利威普通直播需要给链接的.xlsx";
 
-    @Resource
-    private zhyService zhyService;
+        String txtUrl = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\plvyV3.txt";
+
+        try {
+
+            //读取数据三份excel数据
+            //直播表关联关系
+            //保利威表关联关系
+            List<VideoHotfixDTO> plUrlVideoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(plUrl, 7),  7, false);
+            //只是为了拿kdtId   这里可以弄个频道map
+            List<VideoHotfixDTO> liveUrlVideoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 21), 21 , false);
+            Map<String, VideoHotfixDTO> liveUrlMap = liveUrlVideoHotfixDTOList.stream()
+                    .filter(Objects::nonNull).collect(Collectors.toMap(VideoHotfixDTO::getChannelId, v -> v, (k1, k2) -> k1));
+
+            //这里还要有个kdtIdList用来效验要不要处理
+            List<String> stringList = readLinesFromFile(txtUrl);
+
+            for (VideoHotfixDTO videoHotfixDTO : plUrlVideoHotfixDTOList) {
+                VideoHotfixDTO videoHotfixDTO1 = liveUrlMap.get(videoHotfixDTO.getChannelId());
+                if (videoHotfixDTO1 == null){
+                    continue;
+                }
+                if (Objects.nonNull(videoHotfixDTO1.getKdtId()) && stringList.contains(videoHotfixDTO1.getKdtId())) {
+                    videoHotfixDTOList.add(convert(videoHotfixDTO, videoHotfixDTO1));
+                }
+
+            }
+
+            //普通视频直播表数据 追加的回放链接
+            List<VideoHotfixDTO> videoUrlVideoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(videoUrl, 7), 7, true).stream()
+                    .filter(o -> Objects.equals("2", o.getType())).collect(Collectors.toList());
+            Map<String, VideoHotfixDTO> collect = plUrlVideoHotfixDTOList.stream()
+                    .filter(Objects::nonNull).collect(Collectors.toMap(VideoHotfixDTO::getVidId, v -> v, (k1, k2) -> k1));
+
+
+            videoUrlVideoHotfixDTOList.stream().forEach(videoHotfixDTO -> {
+                if (Objects.nonNull(videoHotfixDTO.getVidId())){
+                    VideoHotfixDTO videoHotfixDTO1 = collect.get(videoHotfixDTO.getVidId());
+                    if (Objects.nonNull(videoHotfixDTO1)){
+                        videoUrlList.add(convertV2(videoHotfixDTO, videoHotfixDTO1));
+                    }else {
+                        videoUrlList.add(videoHotfixDTO);
+                    }
+                }else {
+                    videoUrlList.add(videoHotfixDTO);
+                }
+            });
+
+
+            videoHotfixDTOList.addAll(videoUrlList);
+            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+            //写入新格式表
+            EasyExcel.write(FILE_NAME, VideoHotfixDTO.class).sheet("需要下载链接的回放").doWrite(videoHotfixDTOList);
+
+        } catch (Exception e) {
+            log.error("失败了 e:{}", e);
+        }
+
+    }
+
+
+    /**
+     * 读取三方excel数据筛选数据
+     */
+    @Test
+    public void videoYouZanTestV2() {
+        List<VideoHotfixDTO> videoUrlList = new ArrayList<>();
+        List<VideoHotfixDTO> videoHotfixDTOList = new ArrayList<>();
+//        String plUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\test\\1 - 副本.xlsx";
+//        String liveUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\test\\1.xlsx";
+//        String videoUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\test\\1 - 副本 (2).xlsx";
+        String plUrl = "C:\\Users\\Admin\\Documents\\WeChat Files\\wxid_4egrh9j2kcc522\\FileStorage\\File\\2024-08\\youzan.xlsx";
+        String liveUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\有赞channel.xlsx";
+        String videoUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\保利威普通直播需要给链接的.xlsx";
+
+        String txtUrl = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\plvyV3.txt";
+
+        String excelFile = "C:\\Users\\Admin\\Desktop\\文件\\excel\\保利威要下载的实际的 v2版本.xlsx";
+//        String excelFile = "C:\\Users\\Admin\\Desktop\\文件\\excel\\test\\1 - 副本 (4).xlsx";
+        try {
+
+            //读取数据三份excel数据
+            //直播表关联关系
+            //保利威表关联关系
+            List<VideoHotfixDTO> plUrlVideoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(plUrl, 7),  7, false);
+            //只是为了拿kdtId   这里可以弄个频道map
+            List<VideoHotfixDTO> liveUrlVideoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 21), 21, false);
+            Map<String, VideoHotfixDTO> liveUrlMap = liveUrlVideoHotfixDTOList.stream()
+                    .filter(Objects::nonNull).collect(Collectors.toMap(VideoHotfixDTO::getChannelId, v -> v, (k1, k2) -> k1));
+
+            System.err.println(liveUrlMap);
+
+            //这里还要有个kdtIdList用来效验要不要处理
+            List<String> stringList = readLinesFromFile(txtUrl);
+
+            for (VideoHotfixDTO videoHotfixDTO : plUrlVideoHotfixDTOList) {
+                VideoHotfixDTO videoHotfixDTO1 = liveUrlMap.get(videoHotfixDTO.getChannelId());
+                if (videoHotfixDTO1 == null) {
+                    continue;
+                }
+                if (Objects.nonNull(videoHotfixDTO1.getKdtId()) && stringList.contains(videoHotfixDTO1.getKdtId())) {
+                    videoHotfixDTOList.add(convert(videoHotfixDTO, videoHotfixDTO1));
+                }
+
+            }
+
+            //普通视频直播表数据 追加的回放链接
+            List<VideoHotfixDTO> videoUrlVideoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(videoUrl, 7), 7, true).stream()
+                    .filter(o -> Objects.equals("2", o.getType())).collect(Collectors.toList());
+            Map<String, VideoHotfixDTO> collect = plUrlVideoHotfixDTOList.stream()
+                    .filter(Objects::nonNull).collect(Collectors.toMap(VideoHotfixDTO::getVidId, v -> v, (k1, k2) -> k1));
+
+            videoUrlVideoHotfixDTOList.stream().forEach(videoHotfixDTO -> {
+                if (Objects.nonNull(videoHotfixDTO.getVidId())){
+                    VideoHotfixDTO videoHotfixDTO1 = collect.get(videoHotfixDTO.getVidId());
+                    if (Objects.nonNull(videoHotfixDTO1)){
+                        videoUrlList.add(convertV2(videoHotfixDTO, videoHotfixDTO1));
+                    }else {
+                        videoUrlList.add(videoHotfixDTO);
+                    }
+                }else {
+                    videoUrlList.add(videoHotfixDTO);
+                }
+            });
+
+
+            videoHotfixDTOList.addAll(videoUrlList);
+            // 这里 需要指定写用哪个class去写，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+            //写入新格式表
+            EasyExcel.write(excelFile, VideoHotfixDTO.class).sheet("需要下载链接的回放").doWrite(videoHotfixDTOList);
+
+        } catch (Exception e) {
+            log.error("失败了 e:{}", e);
+        }
+
+    }
+
+
+
+
+    @Test
+    public void videoYouZanTest(){
+        String liveUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\有赞channel.xlsx";
+        //只是为了拿kdtId   这里可以弄个频道map
+        try {
+
+
+//            Map<String, VideoHotfixDTO> liveUrlMap = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 21), 21).stream()
+//                    .filter(Objects::nonNull).collect(Collectors.toMap(VideoHotfixDTO::getChannelId, v -> v, (k1, k2) -> k1));
+//
+//            System.err.println(liveUrlMap);
+
+
+            List<VideoHotfixDTO> videoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 21), 21, false);
+
+            EasyExcel.write(FILE_NAME, VideoHotfixDTO.class).sheet("需要下载链接的回放").doWrite(videoHotfixDTOList);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
     @Test
@@ -152,23 +330,6 @@ public class excelXlTest {
             log.error("失败了 e:{}", e);
         }
     }
-
-
-    private static List<String> readLinesFromFile(String filePath) {
-        List<String> lines = new ArrayList<>();
-
-        // try-with-resources
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return lines;
-    }
-
 
 
 
@@ -332,6 +493,209 @@ public class excelXlTest {
 
     }
 
+
+    /**
+     *  公共读取excel数据
+     * @param url
+     * @param sun
+     * @return
+     * @throws Exception
+     */
+    public List<List<String>> readExcelXlsCommand(String url, Integer sun) throws Exception {
+        Integer num = 0;
+        List<List<String>> listArrayList = new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        try {
+            //创建工作簿对象
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream(url));
+            //获取工作簿下sheet的个数
+            int sheetNum = xssfWorkbook.getNumberOfSheets();
+//            System.out.println("该excel文件中总共有：" + sheetNum + "个sheet");
+            //遍历工作簿中的所有数据
+            for (int i = 0; i < sheetNum; i++) {
+                //只读第一张表
+                if (i >= 1) break;
+                //读取第i个工作表
+//                System.out.println("读取第" + (i + 1) + "个sheet");
+                XSSFSheet sheet = xssfWorkbook.getSheetAt(i);
+                //获取最后一行的num，即总行数。此处从0开始
+                int maxRow = sheet.getLastRowNum();
+                for (int row = 0; row <= maxRow; row++) {
+                    //获取最后单元格num，即总单元格数 ***注意：此处从1开始计数***
+                    int maxRol = sheet.getRow(row).getLastCellNum();
+//                    System.out.println("--------第" + row + "行的数据如下--------");
+                    for (int rol = 0; rol < maxRol; rol++) {
+//                        System.out.print(sheet.getRow(row).getCell(rol) + "  ");
+//                        XSSFCell cell = sheet.getRow(row).getCell(rol);
+//                        System.err.println(cell);
+                        num++;
+
+                        list.add(String.valueOf(sheet.getRow(row).getCell(rol)));
+                        if (num % sun == 0) {
+                            System.err.println(list);
+                            //这里转换 需要把list数据循环赋值转成dto
+                            listArrayList.add(list);
+                            list.clear();
+                        }
+                    }
+                }
+            }
+            return listArrayList;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("readExcelXlsCommand 失败了哈啊哈哈哈哈哈 E:{}" + e);
+            return new ArrayList<>();
+        }
+    }
+
+
+
+
+    /**
+     *  公共读取excel数据
+     * @param url
+     * @param sun
+     * @return
+     * @throws Exception
+     */
+    public List<List<String>> readExcelXlsCommandV2(String url, Integer sun) throws Exception {
+        List<List<String>> listArrayList = new ArrayList<>();
+        try {
+            //创建工作簿对象
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(new FileInputStream(url));
+            org.apache.poi.ss.usermodel.Sheet sheet = xssfWorkbook.getSheetAt(0);
+            //当前有两种模版 一种是第一行是描述行第二行才是表头，另一种第一行就是表头，如果第一行是描述行则从第二行开始读
+            List<String> row0 = readOneRow(sheet.getRow(0));
+            int startRowNum = 1;
+            if (row0.stream().filter(StringUtils::isNotBlank).count() != row0.size()) {
+                startRowNum = startRowNum + 1;
+            }
+            // 第i行是表名，忽略，从第下一行开始读取
+            for (int rowNum = startRowNum; rowNum <= sheet.getLastRowNum(); rowNum++) {
+                Row row = sheet.getRow(rowNum);
+                if(null == row){
+                    System.err.println("解析excel文件，filePath:"+ url + ", 第"+ rowNum+"行是空行");
+                    continue;
+                }
+                List<String> data = new ArrayList<>();
+                for (int j = 0; j < sun; j++) {
+                    // 定义每一个cell的数据类型
+                    Cell cell = row.getCell(j);
+                    if (cell == null) {
+                        data.add("");
+                    } else if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
+                        Date date = cell.getDateCellValue();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        String formattedDate = sdf.format(date);
+                        data.add(formattedDate);
+                    } else {
+                        cell.setCellType(CellType.STRING);
+                        // 取出cell中的value
+                        data.add(cell.getStringCellValue());
+                    }
+                }
+                listArrayList.add(data);
+            }
+
+            return listArrayList;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("readExcelXlsCommandV2 失败了哈啊哈哈哈哈哈 E:{}" + e);
+            return new ArrayList<>();
+        }
+    }
+
+
+    /**
+     * 解析excel文件
+     *
+     * @param filePath
+     *            文件地址
+     * @param fileHeaderLength
+     *            excel第一行标题个数
+     * @return
+     */
+    public static List<List<String>> readExcel(String filePath, Integer fileHeaderLength) {
+        org.apache.poi.ss.usermodel.Workbook workbook = null;
+        List<List<String>> list = new ArrayList<>();
+        try {
+            workbook = getReadWorkBookType(filePath);
+            // 获取第一个sheet
+            org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0);
+            //当前有两种模版 一种是第一行是描述行第二行才是表头，另一种第一行就是表头，如果第一行是描述行则从第二行开始读
+            List<String> row0 = readOneRow(sheet.getRow(0));
+            int startRowNum = 1;
+            if (row0.stream().filter(StringUtils::isNotBlank).count() != row0.size()) {
+                startRowNum = startRowNum + 1;
+            }
+            // 第i行是表名，忽略，从第下一行开始读取
+            for (int rowNum = startRowNum; rowNum <= sheet.getLastRowNum(); rowNum++) {
+                Row row = sheet.getRow(rowNum);
+                if(null == row){
+                    log.info("解析excel文件，filePath = {}, 第 {} 行是空行", filePath, rowNum);
+                    continue;
+                }
+                List<String> data = new ArrayList<>();
+                for (int j = 0; j < fileHeaderLength; j++) {
+                    // 定义每一个cell的数据类型
+                    Cell cell = row.getCell(j);
+                    if (cell == null) {
+                        data.add("");
+                    } else {
+                        cell.setCellType(CellType.STRING);
+                        // 取出cell中的value
+                        data.add(cell.getStringCellValue());
+                    }
+                }
+                list.add(data);
+            }
+            return list;
+        } finally {
+            IOUtils.closeQuietly(workbook);
+        }
+    }
+
+
+    /**
+     * 根据文件后缀获取excel工作空间
+     *
+     * @param filePath
+     *            文件路径
+     * @return
+     */
+    private static org.apache.poi.ss.usermodel.Workbook getReadWorkBookType(String filePath) {
+        // xls-2003, xlsx-2007
+        InputStream is = null;
+        try {
+            if (filePath.toLowerCase().endsWith("xlsx")) {
+                return new XSSFWorkbook(is);
+            } else if (filePath.toLowerCase().endsWith("xls")) {
+                return new HSSFWorkbook(is);
+            } else {
+                // 抛出自定义的业务异常
+                throw new BusinessException(-100);
+            }
+        } catch (IOException e) {
+            // 抛出自定义的业务异常
+            throw new BusinessException(-100);
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
+    }
+
+
+
+    private static List<String> readOneRow(Row row) {
+        List<String> head = new ArrayList<>();
+        if (null == row) {
+            return head;
+        }
+
+        for (Cell cell : row) {
+            head.add(cell.getStringCellValue());
+        }
+        return head;
+    }
 
     //低级的数据取值
     private ExcelKttOrderDTO data(List<String> list){
@@ -646,6 +1010,117 @@ public class excelXlTest {
         return Optional.ofNullable(url.substring(indexOf+1)).orElse(null);
     }
 
+
+
+
+    /**
+     * *读取资源并关闭
+     * // try-with-resources 语句中创建reader2的实例。BufferedReader当执行退出try块时，
+     * // 会自动调用close()每个实例的方法，释放关联的资源。BufferedReader
+     * //        try (BufferedReader reader1 = new BufferedReader(new FileReader(filePath1));
+     * //             BufferedReader reader2 = new BufferedReader(new FileReader(filePath2))) {
+     * //            // Code to read and compare lines
+     * //        } catch (IOException e) {
+     * //            e.printStackTrace();
+     * //        }
+     * @param filePath
+     * @return
+     */
+    private static List<String> readLinesFromFile(String filePath) {
+        List<String> lines = new ArrayList<>();
+
+        // try-with-resources
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
+
+
+
+
+
+    /**
+     * 转换数据
+     * @param list
+     * @param num
+     * @return
+     */
+    private List<VideoHotfixDTO> buildVideoHotfixDTO(List<List<String>> list, Integer num, boolean istttime){
+        List<VideoHotfixDTO> videoHotfixDTOList = new ArrayList<>();
+
+        for (List<String> stringList : list) {
+
+            if (Objects.equals(7, num) && Objects.equals(false, istttime)) {
+                VideoHotfixDTO videoHotfixDTO = new VideoHotfixDTO();
+                videoHotfixDTO.setChannelId(stringList.get(0));
+                videoHotfixDTO.setMonth(stringList.get(2));
+                videoHotfixDTO.setTime(stringList.get(3));
+                videoHotfixDTO.setByteSize(stringList.get(4));
+                videoHotfixDTO.setVidId(stringList.get(6));
+                videoHotfixDTOList.add(videoHotfixDTO);
+            }
+
+            if (Objects.equals(21, num)) {
+                VideoHotfixDTO videoHotfixDTO = new VideoHotfixDTO();
+                if (Objects.nonNull(stringList.get(5)) && !Objects.equals(stringList.get(5), "0")){
+                    videoHotfixDTO.setKdtId(stringList.get(1));
+                    videoHotfixDTO.setType(stringList.get(4));
+                    videoHotfixDTO.setChannelId(stringList.get(5));
+                    videoHotfixDTOList.add(videoHotfixDTO);
+                }
+
+            }
+
+
+            if (Objects.equals(7, num) && Objects.equals(true, istttime)) {
+                VideoHotfixDTO videoHotfixDTO = new VideoHotfixDTO();
+                videoHotfixDTO.setKdtId(stringList.get(0));
+                videoHotfixDTO.setChannelId(stringList.get(1));
+                videoHotfixDTO.setVidId(Objects.nonNull(stringList.get(2)) ? stringList.get(2) : "");
+                videoHotfixDTO.setType(stringList.get(4));
+                videoHotfixDTO.setUrl(Objects.nonNull(stringList.get(5)) ? stringList.get(5) : "");
+                videoHotfixDTO.setVideoBlack(String.valueOf(1));
+                videoHotfixDTOList.add(videoHotfixDTO);
+            }
+
+        }
+
+        return videoHotfixDTOList;
+    }
+
+
+    private VideoHotfixDTO convert(VideoHotfixDTO videoHotfixList, VideoHotfixDTO hotfixMap){
+        VideoHotfixDTO videoHotfixDTO = new VideoHotfixDTO();
+        videoHotfixDTO.setKdtId(hotfixMap.getKdtId());
+        videoHotfixDTO.setChannelId(hotfixMap.getChannelId());
+        videoHotfixDTO.setVidId(videoHotfixList.getVidId());
+        videoHotfixDTO.setType(hotfixMap.getType());
+        videoHotfixDTO.setMonth(videoHotfixList.getMonth());
+        videoHotfixDTO.setTime(videoHotfixList.getTime());
+        videoHotfixDTO.setByteSize(videoHotfixList.getByteSize());
+        return videoHotfixDTO;
+    }
+
+
+    private VideoHotfixDTO convertV2(VideoHotfixDTO videoUrlHotfixList, VideoHotfixDTO videoHotfixList){
+        VideoHotfixDTO videoHotfixDTO = new VideoHotfixDTO();
+        videoHotfixDTO.setKdtId(videoUrlHotfixList.getKdtId());
+        videoHotfixDTO.setChannelId(videoUrlHotfixList.getChannelId());
+        videoHotfixDTO.setVidId(videoUrlHotfixList.getVidId());
+        videoHotfixDTO.setType(videoUrlHotfixList.getType());
+        videoHotfixDTO.setMonth(videoHotfixList.getMonth());
+        videoHotfixDTO.setTime(videoHotfixList.getTime());
+        videoHotfixDTO.setByteSize(videoHotfixList.getByteSize());
+        videoHotfixDTO.setUrl(videoUrlHotfixList.getUrl());
+        videoHotfixDTO.setVideoBlack(videoUrlHotfixList.getVideoBlack());
+        return videoHotfixDTO;
+    }
 
 
 
