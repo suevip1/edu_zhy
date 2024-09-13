@@ -22,6 +22,8 @@ import org.junit.Test;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,21 @@ public class excelXlTest {
 
     private static List<String> newArrayListist = Lists.newArrayList("跟团号"
             , "下单人", "支付时间", "商品", "订单金额", "订单退款", "订单状态", "收货人", "联系电话", "详细地址");
+
+
+    @Test
+    public void danceshiPl(){
+        String liveUrl = "C:\\Users\\Admin\\Desktop\\暂存处理名单8-16\\excel\\保利威是寄给的\\副本.xlsx";
+
+        try {
+            List<VideoHotfixDTO> videoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 9), 9, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+
+
+    }
 
     /**
      * 读取三方excel数据筛选数据
@@ -145,7 +162,7 @@ public class excelXlTest {
 
         String txtUrl = "C:\\Users\\Admin\\IdeaProjects\\edu_zhy\\edu-zhy-api\\src\\main\\java\\com\\edu\\zhy\\api\\api\\excel\\plvyV3.txt";
 
-        String excelFile = "C:\\Users\\Admin\\Desktop\\文件\\excel\\保利威要下载的实际的 v2版本.xlsx";
+        String excelFile = "C:\\Users\\Admin\\Desktop\\文件\\plvy\\暂存处理名单8-16\\保利威要链接下载暂存视频.xlsx";
 //        String excelFile = "C:\\Users\\Admin\\Desktop\\文件\\excel\\test\\1 - 副本 (4).xlsx";
         try {
 
@@ -209,28 +226,56 @@ public class excelXlTest {
 
 
     @Test
-    public void videoYouZanTest(){
-        String liveUrl = "C:\\Users\\Admin\\Desktop\\文件\\excel\\有赞channel.xlsx";
-        //只是为了拿kdtId   这里可以弄个频道map
+    public void videoYouZanTest() {
+        String liveUrl = "C:\\Users\\Admin\\Desktop\\暂存处理名单8-16\\excel\\保利威是寄给的\\202409-09给三方全部副本.xlsx";
+
+        String excelFile = "C:\\Users\\Admin\\Desktop\\暂存处理名单8-16\\excel\\保利威是寄给的\\过滤掉vid的20240913.xlsx";
+
         try {
+            List<VideoHotfixDTO> videoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 9), 9, false);
 
+            List<VideoHotfixDTO> videoHotfixDTOS = videoHotfixDTOList.stream().filter(Objects::nonNull)
+                    //过滤掉没有vid的
+                    .filter(videoHotfixDTO -> StringUtils.isBlank(videoHotfixDTO.getVidId()))
+                    .collect(Collectors.toList());
 
-//            Map<String, VideoHotfixDTO> liveUrlMap = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 21), 21).stream()
-//                    .filter(Objects::nonNull).collect(Collectors.toMap(VideoHotfixDTO::getChannelId, v -> v, (k1, k2) -> k1));
-//
-//            System.err.println(liveUrlMap);
+//            List<VideoHotfixDTO> collect = videoHotfixDTOList.stream().filter(Objects::nonNull).filter(videoHotfixDTO -> checkTime(videoHotfixDTO.getTime())).collect(Collectors.toList());
 
-
-            List<VideoHotfixDTO> videoHotfixDTOList = buildVideoHotfixDTO(readExcelXlsCommandV2(liveUrl, 21), 21, false);
-
-            EasyExcel.write(FILE_NAME, VideoHotfixDTO.class).sheet("需要下载链接的回放").doWrite(videoHotfixDTOList);
-
+            EasyExcel.write(excelFile, VideoHotfixDTO.class).sheet("没有vid实际可以删除暂存的").doWrite(videoHotfixDTOS);
 
         } catch (Exception e) {
             e.printStackTrace();
+            System.err.println(e);
         }
 
+    }
 
+    @Test
+    public void  test1() {
+
+        Boolean aBoolean = checkTime("2021/08/31 00:00:00");
+        System.err.println(aBoolean);
+
+    }
+
+
+    private Boolean checkTime(String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime targetDateTime = LocalDateTime.parse(time, formatter);
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+//        System.err.println(currentDateTime);
+
+//        LocalDateTime localDateTime = targetDateTime.plusYears(3);
+//        System.err.println(localDateTime);
+
+        if (currentDateTime.isBefore(targetDateTime.plusYears(3))) {
+//            System.out.println("当前时间小于三年前的时间");
+            return true;
+        } else {
+//            System.out.println("当前时间大于或等于三年前的时间");
+            return false;
+        }
     }
 
 
@@ -1087,6 +1132,22 @@ public class excelXlTest {
                 videoHotfixDTO.setUrl(Objects.nonNull(stringList.get(5)) ? stringList.get(5) : "");
                 videoHotfixDTO.setVideoBlack(String.valueOf(1));
                 videoHotfixDTOList.add(videoHotfixDTO);
+            }
+
+
+            if (Objects.equals(9, num)) {
+                VideoHotfixDTO videoHotfixDTO = new VideoHotfixDTO();
+                videoHotfixDTO.setKdtId(stringList.get(0));
+                videoHotfixDTO.setChannelId(stringList.get(1));
+                videoHotfixDTO.setVidId(Objects.nonNull(stringList.get(2)) ? stringList.get(2) : "");
+                videoHotfixDTO.setType(stringList.get(3));
+                videoHotfixDTO.setMonth(stringList.get(4));
+                videoHotfixDTO.setTime(stringList.get(5));
+                videoHotfixDTO.setByteSize(stringList.get(6));
+                videoHotfixDTO.setUrl(Objects.nonNull(stringList.get(7)) ? stringList.get(7) : "");
+                videoHotfixDTO.setVideoBlack(Objects.nonNull(stringList.get(8)) ? stringList.get(8) : "");
+                videoHotfixDTOList.add(videoHotfixDTO);
+                System.err.println(videoHotfixDTO);
             }
 
         }
